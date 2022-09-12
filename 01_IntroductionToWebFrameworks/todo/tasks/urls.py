@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import ToDoView
+from .views import RandomToDoView
 
 urlpatterns = [
-    path('', ToDoView.as_view(), name='todo-view'),
+    path('', RandomToDoView.as_view(), name='todo-view'),
 ]
