@@ -4,36 +4,24 @@ from django.http import HttpResponse
 
 
 def advertisements_list(request, *args, **kwargs):
-    return HttpResponse('<ul>'
-                        '<li>Объявления</li>'
-                        '</ul>')
+    return render(request, 'advertisements/advertisements_list.html', {})
 
 
 def first_advertisement(request, *args, **kwargs):
-    return HttpResponse('<ul>'
-                        '<li>1</li>'
-                        '</ul>')
+    return render(request, 'advertisements/first_advertisement.html', {})
 
 
 def second_advertisement(request, *args, **kwargs):
-    return HttpResponse('<ul>'
-                        '<li>2</li>'
-                        '</ul>')
+    return render(request, 'advertisements/second_advertisement.html', {})
 
 
 def third_advertisement(request, *args, **kwargs):
-    return HttpResponse('<ul>'
-                        '<li>3</li>'
-                        '</ul>')
+    return render(request, 'advertisements/third_advertisement.html', {})
 
 
 def fourth_advertisement(request, *args, **kwargs):
-    return HttpResponse('<ul>'
-                        '<li>4</li>'
-                        '</ul>')
+    return render(request, 'advertisements/fourth_advertisement.html', {})
 
 
 def fifth_advertisement(request, *args, **kwargs):
-    return HttpResponse('<ul>'
-                        '<li>5</li>'
-                        '</ul>')
+    return render(request, 'advertisements/fifth_advertisement.html', {})
