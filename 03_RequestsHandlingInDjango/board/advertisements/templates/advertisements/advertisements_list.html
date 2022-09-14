@@ -1,0 +1,17 @@
+<html>
+
+    {% if type == "GET" %}
+        <ul>
+        {% for advertisement in advertisements %}
+            <li>{{ advertisement }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+    <p>{{ message }}</p>
+    {% endif %}
+
+    <p>{{ cnt }}</p>
+
+
+
+</html>

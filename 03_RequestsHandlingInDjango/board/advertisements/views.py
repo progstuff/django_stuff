@@ -1,17 +1,26 @@
 from django.shortcuts import render
+from django.views import View
 
 
-def advertisement_list(request, *args, **kwargs):
+class AdvertisementsView(View):
+    cnt = 0
     advertisements = [
         'Мастер на час',
         'Выведение из запоя',
         'Услуги экскаватора-погрузчика, гидромолота, ямобура'
     ]
-    advertisements_1 = [
-        'Мастер на час',
-        'Выведение из запоя',
-        'Услуги экскаватора-погрузчика, гидромолота, ямобура'
-    ]
-    return render(request, 'advertisements/advertisement_list.html', {'advertisements': advertisements,
-                                                                      'advertisements_1': advertisements_1})
 
+    def get(self, request):
+
+        AdvertisementsView.cnt = AdvertisementsView.cnt + 1
+        return render(request,
+                      'advertisements/advertisements_list.html',
+                      {'advertisements': AdvertisementsView.advertisements,
+                       'cnt': AdvertisementsView.cnt,
+                       'type': 'GET'})
+
+    def post(self, request):
+        message = "запрос успешно выполнен"
+        return render(request, 'advertisements/advertisements_list.html', {'message': message,
+                                                                           'cnt': AdvertisementsView.cnt,
+                                                                           'type': 'POST'})
