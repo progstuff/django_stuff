@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+</head>
+<body>
+<form action="#">
+    <fieldset>
+          <label for="category">Категория</label>
+          <select id="category">
+              {% for category in categories %}
+            <option>{{ category }}</option>
+              {% endfor %}
+          </select><br>
+
+          <label for="region">Регион</label>
+          <select id="region">
+              {% for region in regions %}
+            <option>{{ region }}</option>
+              {% endfor %}
+          </select><br>
+          <label for="advertisement">Объявление</label>
+          <input id="advertisement"><br>
+      </fieldset>
+      <p><input type="submit" value="Найти"></p>
+</form>
+</body>
+</html>
