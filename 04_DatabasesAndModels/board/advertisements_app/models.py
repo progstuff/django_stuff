@@ -12,11 +12,17 @@ class Advertisement(models.Model):
                                  related_name="categories", verbose_name='Категория')
     author = models.ForeignKey('Author', default=None, null=True, on_delete=models.CASCADE, verbose_name='Автор')
 
+    def __str__(self):
+        return self.title
+
 
 class Author(models.Model):
     name = models.CharField(max_length=100, verbose_name='ФИО')
     email = models.CharField(max_length=100, verbose_name='e-mail')
     phone = models.CharField(max_length=100, verbose_name='телефон')
+
+    def __str__(self):
+        return '{0} тел. {1} почта {2}'.format(self.name, self.phone, self.email)
 
 
 class AdvertisementCategory(models.Model):

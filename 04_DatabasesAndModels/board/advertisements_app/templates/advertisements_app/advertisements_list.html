@@ -6,5 +6,15 @@
 </head>
 <body>
 
+    {% if advertisements %}
+    <ul>
+        {% for advertisement in advertisements%}
+        <li><p><a href="advertisements/{{advertisement.id}}">{{advertisement.title}} {{advertisement.price}} {{advertisement.category}}</a></p></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+<h2>Объявлений нет</h2>
+    {% endif %}
+
 </body>
 </html>

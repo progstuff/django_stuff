@@ -1,11 +1,21 @@
-from django.views.generic import TemplateView
+from django.views import generic
+from advertisements_app.models import Advertisement
 
-class AdvertisementsList(TemplateView):
+
+class AdvertisementsListView(generic.ListView):
+    model = Advertisement
     template_name = 'advertisements_app/advertisements_list.html'
+    context_object_name = 'advertisements'
+    queryset = Advertisement.objects.all()
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['address'] = "адрес"
-        context['phone'] = "8-xxx-xxx-xx-xx"
-        context['email'] = "mail@mail.ru"
-        return context
+
+class AdvertisementDetailView(generic.DetailView):
+    model = Advertisement
+    template_name = 'advertisements_app/advertisement_detail.html'
+    context_object_name = 'advertisement'
+
+    def get_object(self):
+        obj = super().get_object()
+        obj.views_cnt += 1
+        obj.save()
+        return obj
