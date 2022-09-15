@@ -9,8 +9,8 @@ class Advertisement(models.Model):
     update_date = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     views_cnt = models.IntegerField(default=0, verbose_name='Количество просмотров')
     category = models.ForeignKey('AdvertisementCategory', default=None, null=True, on_delete=models.CASCADE,
-                                 related_name="categories")
-    author = models.ForeignKey('Author', default=None, null=True, on_delete=models.CASCADE)
+                                 related_name="categories", verbose_name='Категория')
+    author = models.ForeignKey('Author', default=None, null=True, on_delete=models.CASCADE, verbose_name='Автор')
 
 
 class Author(models.Model):
@@ -22,5 +22,7 @@ class Author(models.Model):
 class AdvertisementCategory(models.Model):
     name = models.CharField(max_length=12, verbose_name='Категория')
 
+    def __str__(self):
+        return self.name
 
 
