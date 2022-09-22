@@ -1,5 +1,14 @@
 from django import forms
+from .models import News, Comment
 
 
-class NameForm(forms.Form):
-    your_name = forms.CharField(label='Your name', max_length=100)
+class NewsForm(forms.ModelForm):
+    class Meta:
+        model = News
+        fields = ['title', 'description']
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['user_name', 'description']
