@@ -1,9 +1,9 @@
-from django.shortcuts import render
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
+from .models import News, Comment
 from .forms import NameForm
+from django.views import generic
 
 
 def get_name(request):
@@ -25,6 +25,13 @@ def get_name(request):
     return render(request, 'app_news/name.html', {'form': form})
 
 
+class AdvertisementsListView(generic.ListView):
+    model = News
+    template_name = 'app_news/show_news.html'
+    context_object_name = 'all_news'
+    queryset = News.objects.all()
+
+
 def show_all_news(request):
     return render(request, 'app_news/show_news.html', {})
 
@@ -33,9 +40,17 @@ def create_news(request):
     return render(request, 'app_news/create_news.html', {})
 
 
-def change_news(request):
-    return render(request, 'app_news/change_news.html', {})
+class NewsDetailView(generic.DetailView):
+    model = News
+    template_name = 'app_news/change_news.html'
+    context_object_name = 'news'
 
 
-def show_comments(request):
-    return render(request, 'app_news/show_comments.html', {})
+class CommentsListView(generic.ListView):
+    model = Comment
+    template_name = 'app_news/show_comments.html'
+    context_object_name = 'comments'
+
+    def get_queryset(self):
+        comments = Comment.objects.all().filter(news=self.request.resolver_match.kwargs['pk'])
+        return comments

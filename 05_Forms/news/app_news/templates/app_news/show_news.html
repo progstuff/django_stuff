@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Страница новостей</title>
+    <title>Все новости</title>
 </head>
 <body>
-
-</body>
+<html>
+    {% for news in all_news %}
+        <h2><a href="/all-news/{{news.id}}/comments">{{ news.title }}</a> </h2>
+        <p> <a href="change-news/{{news.id}}">Редактировать</a></p>
+        <h3>{{ news.description }}</h3>
+    {% endfor %}
 </html>
