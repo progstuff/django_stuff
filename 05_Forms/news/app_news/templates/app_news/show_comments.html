@@ -19,7 +19,7 @@
 <form method="post">
     {% csrf_token %}
     {{ comment_form.as_p }}
-    <input type="submit" value="Submit">
+    <button type="submit">Отправить</button>
 </form>
 <a href="/all-news">Назад</a>
 </body>

@@ -15,17 +15,29 @@ class NewsListView(generic.ListView):
 
 class NewsDetailView(View):
 
-    def get(self, request, pk):
-        news = News.objects.get(id=pk)
+    def get(self, request, news_id):
+        news = News.objects.get(id=news_id)
         news_form = NewsForm(instance=news)
-        return render(request, 'app_news/change_news.html', context={'news_id': pk,
+        return render(request, 'app_news/change_news.html', context={'news_id': news_id,
                                                                      'news_form': news_form})
 
 
 class CommentsListView(View):
 
-    def get(self, request, pk):
-        comments = Comment.objects.all().filter(news=self.request.resolver_match.kwargs['pk'])
+    def get(self, request, news_id):
+        comments = Comment.objects.all().filter(news=self.request.resolver_match.kwargs['news_id'])
+        comment_form = CommentForm()
+        return render(request, 'app_news/show_comments.html', context={'comments': comments,
+                                                                       'comment_form': comment_form})
+
+    def post(self, request, news_id):
+
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            Comment.objects.create(user_name=request.POST['user_name'],
+                                   description=request.POST['description'],
+                                   news=News.objects.get(id=news_id))
+        comments = Comment.objects.all().filter(news=news_id)
         comment_form = CommentForm()
         return render(request, 'app_news/show_comments.html', context={'comments': comments,
                                                                        'comment_form': comment_form})
