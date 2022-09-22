@@ -16,6 +16,8 @@ class News(models.Model):
 class Comment(models.Model):
     user_name = models.CharField(max_length=100, default='', verbose_name='Пользователь')
     description = models.TextField(max_length=10000, verbose_name='Комментарий')
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    update_date = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     news = models.ForeignKey('News', default=None, null=True, on_delete=models.CASCADE,
                              related_name="news", verbose_name='Новость')
 

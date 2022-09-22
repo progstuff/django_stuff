@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Редактировать новость</title>
+    <title>{{title}}</title>
 </head>
 <body>
 <form method="post">
     {% csrf_token %}
     {{ news_form.as_p}}
-    <button type="submit">Отправить</button>
+    <button type="submit">{{button_name}}</button>
 </form>
 <a href="/all-news">Назад</a>
 </body>

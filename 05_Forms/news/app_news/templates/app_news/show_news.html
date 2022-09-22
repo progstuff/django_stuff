@@ -6,9 +6,16 @@
 </head>
 <body>
 <html>
+    <form action="" method="post">
+         {% csrf_token %}
+        <button type="submit">Создать новость</button>
+    </form>
     {% for news in all_news %}
         <h2><a href="/all-news/{{news.id}}/comments">{{ news.title }}</a> </h2>
+        <p>{{ news.create_date }}</p>
         <p> <a href="change-news/{{news.id}}">Редактировать</a></p>
         <h3>{{ news.description }}</h3>
     {% endfor %}
+
 </html>
+</body>
