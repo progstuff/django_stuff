@@ -10,7 +10,7 @@ class NewsForm(forms.ModelForm):
         fields = ['title', 'description']
         help_texts = {
             'title': 'Введите заголовок',
-            'description': 'Введите комментарий',
+            'description': 'Введите описание',
         }
 
     def clean_title(self):
@@ -35,9 +35,9 @@ class NewsForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['user_name', 'description']
+        fields = ['user', 'description']
         help_texts = {
-            'user_name': 'Введите имя пользователя',
+            'user': 'Введите имя пользователя',
             'description': 'Введите комментарий',
         }
 
