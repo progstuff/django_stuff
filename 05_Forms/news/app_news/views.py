@@ -2,8 +2,9 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .models import News, Comment
-from .forms import NewsForm, CommentForm
+from .forms import NewsForm, CommentForm, AuthForm
 from django.views import generic, View
+from django.views.generic import TemplateView
 
 
 class NewsListView(View):
@@ -36,6 +37,7 @@ class NewsUpdateView(View):
                                                                      'title': 'Редактировать новость',
                                                                      'news_form': news_form})
 
+
 class NewsCreateView(View):
 
     def get(self, request):
@@ -54,7 +56,6 @@ class NewsCreateView(View):
             return render(request, 'app_news/change_news.html', context={'button_name': 'Создать',
                                                                          'title': 'Создать новость',
                                                                          'news_form': news_form})
-
 
 
 class CommentsListView(View):
@@ -76,3 +77,16 @@ class CommentsListView(View):
         comment_form = CommentForm()
         return render(request, 'app_news/show_comments.html', context={'comments': comments,
                                                                        'comment_form': comment_form})
+
+
+class LoginView(TemplateView):
+    template_name = "app_news/login.html"
+
+    def get(self, request, *args, **kwargs):
+        auth_form = AuthForm()
+        return render(request, 'app_news/login.html', context={'form':auth_form})
+
+
+class LogoutView(TemplateView):
+    template_name = "app_news/logout.html"
+

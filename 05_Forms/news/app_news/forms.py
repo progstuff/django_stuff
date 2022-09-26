@@ -4,6 +4,11 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 
+class AuthForm(forms.Form):
+    username = forms.CharField(label='Логин')
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
+
+
 class NewsForm(forms.ModelForm):
     class Meta:
         model = News

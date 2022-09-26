@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('login', views.LoginView.as_view(), name='login'),
+    path('logout', views.LogoutView.as_view(), name='logout'),
     path('all-news', views.NewsListView.as_view(), name='show_news'),
     path('change-news/<int:news_id>', views.NewsUpdateView.as_view(), name='change_news'),
     path('change-news/create', views.NewsCreateView.as_view(), name='create_news'),
