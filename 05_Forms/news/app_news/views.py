@@ -5,6 +5,9 @@ from .models import News, Comment
 from .forms import NewsForm, CommentForm, AuthForm
 from django.views import generic, View
 from django.views.generic import TemplateView
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.views import LogoutView
+from django.http import HttpResponse
 
 
 class NewsListView(View):
@@ -79,14 +82,30 @@ class CommentsListView(View):
                                                                        'comment_form': comment_form})
 
 
-class LoginView(TemplateView):
+class LogInView(TemplateView):
     template_name = "app_news/login.html"
+
+    def post(self, request, *args, **kwargs):
+        auth_form = AuthForm(request.POST)
+        if auth_form.is_valid():
+            username = auth_form.cleaned_data['username']
+            password = auth_form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user:
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponseRedirect('/all-news')
+                else:
+                    auth_form.add_error('__all__', 'Учётная запись не активна')
+            else:
+                auth_form.add_error('__all__', 'Ошибка в логине или пароле')
+        return render(request, 'app_news/login.html', context={'form': auth_form})
 
     def get(self, request, *args, **kwargs):
         auth_form = AuthForm()
         return render(request, 'app_news/login.html', context={'form':auth_form})
 
 
-class LogoutView(TemplateView):
+class LogOutView(LogoutView):
     template_name = "app_news/logout.html"
 

@@ -5,6 +5,13 @@
     <title>Все новости</title>
 </head>
 <body>
+{% if request.user.is_authenticated %}
+<p>Привет, {{request.user}} <a href="/logout">Выйти</a></p>
+{% else %}
+    <a href="/login">Войти</a>
+{% endif %}
+<p> </p>
+<p> </p>
 <html>
     <form action="" method="post">
          {% csrf_token %}
