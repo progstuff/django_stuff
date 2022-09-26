@@ -10,7 +10,12 @@
 {% if forloop.counter == 1%}
 <h2>{{comment.news.title}}</h2>
 {% endif %}
-<h3>{{comment.user}}</h3>
+{%if comment.is_anonim is True%}
+    <h3>{{comment.user}} анонимный</h3>
+{% else %}
+    <h3>{{comment.user}}</h3>
+{% endif %}
+
 <p>{{comment.description}}</p>
 <h3> </h3>
 {% endfor %}

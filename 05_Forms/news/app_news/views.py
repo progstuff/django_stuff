@@ -1,8 +1,8 @@
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .models import News, Comment
-from .forms import NewsForm, CommentForm, AuthForm
+from .models import News, Comment, User
+from .forms import NewsForm, LoggedCommentForm, AnonimCommentForm, AuthForm, get_comment_form
 from django.views import generic, View
 from django.views.generic import TemplateView
 from django.contrib.auth import authenticate, login
@@ -65,19 +65,31 @@ class CommentsListView(View):
 
     def get(self, request, news_id):
         comments = Comment.objects.all().filter(news=self.request.resolver_match.kwargs['news_id']).order_by('create_date')
-        comment_form = CommentForm()
+        comment_form = get_comment_form(request.user.is_authenticated)
         return render(request, 'app_news/show_comments.html', context={'comments': comments,
                                                                        'comment_form': comment_form})
 
     def post(self, request, news_id):
 
-        comment_form = CommentForm(request.POST)
+        comment_form = get_comment_form(request.user.is_authenticated, request.POST)
         if comment_form.is_valid():
-            Comment.objects.create(user_name=request.POST['user_name'],
+            if request.user.is_authenticated:
+                user_name = request.user.username
+            else:
+                user_name = request.POST['user']
+
+            try:
+                user = User.objects.get(user_name=user_name)
+            except User.DoesNotExist:
+                user = User.objects.create(user_name=user_name)
+
+            Comment.objects.create(user=user,
                                    description=request.POST['description'],
-                                   news=News.objects.get(id=news_id))
-        comments = Comment.objects.all().filter(news=news_id).order_by('create_date')
-        comment_form = CommentForm()
+                                   news=News.objects.get(id=news_id),
+                                   is_anonim=not request.user.is_authenticated)
+        comments = Comment.objects.all().filter(news=news_id).order_by('-create_date')
+        comment_form = get_comment_form(request.user.is_authenticated, request.POST)
+
         return render(request, 'app_news/show_comments.html', context={'comments': comments,
                                                                        'comment_form': comment_form})
 

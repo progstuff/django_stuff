@@ -40,6 +40,7 @@ class Comment(models.Model):
                              related_name="news", verbose_name='Новость')
 
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='p', verbose_name='Статус')
+    is_anonim = models.BooleanField(default=False, verbose_name='Анонимный')
 
     @property
     def short_description(self):
