@@ -2,12 +2,22 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .models import News, Comment, User
-from .forms import NewsForm, LoggedCommentForm, AnonimCommentForm, AuthForm, get_comment_form
-from django.views import generic, View
+from .forms import NewsForm, AuthForm, get_comment_form, ExtendedUserRegisterForm
+from django.views import View
 from django.views.generic import TemplateView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LogoutView
-from django.http import HttpResponse
+
+
+class RegisterView(View):
+
+    def get(self, request, *args, **kwargs):
+        register_form = ExtendedUserRegisterForm()
+        return render(request, 'app_news/register.html', context={'form': register_form})
+
+    def post(self, request):
+        register_form = ExtendedUserRegisterForm()
+        return render(request, 'app_news/register.html', context={'form': register_form})
 
 
 class NewsListView(View):
@@ -120,4 +130,5 @@ class LogInView(TemplateView):
 
 class LogOutView(LogoutView):
     template_name = "app_news/logout.html"
+
 

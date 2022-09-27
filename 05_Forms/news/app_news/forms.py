@@ -1,7 +1,37 @@
 from django import forms
 from .models import News, Comment
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import password_validation
+
+
+class ExtendedUserRegisterForm(UserCreationForm):
+    first_name = forms.CharField(max_length=30, required=False, label='Имя')
+    last_name = forms.CharField(max_length=30, required=False, label='Фамилия')
+    password1 = forms.CharField(
+        label=_("Пароль"),
+        strip=False,
+        widget=forms.PasswordInput,
+        help_text="Минимум 8 знаков",
+    )
+    password2 = forms.CharField(
+        label=_("Подтверждение пароля"),
+        widget=forms.PasswordInput,
+        strip=False,
+        help_text=_("Введите пароль ещё раз"),
+    )
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'password1', 'password2', )
+        labels = {
+            'username': _('Логин'),
+        }
+        help_texts = {
+            'username': _('Буквы, цифры и @/./+/-/_'),
+        }
 
 
 class AuthForm(forms.Form):
