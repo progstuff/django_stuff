@@ -16,8 +16,14 @@ class RegisterView(View):
         return render(request, 'app_news/register.html', context={'form': register_form})
 
     def post(self, request):
-        register_form = ExtendedUserRegisterForm()
-        return render(request, 'app_news/register.html', context={'form': register_form})
+        register_form = ExtendedUserRegisterForm(request.POST)
+        if register_form.is_valid():
+            register_form.save()
+            return HttpResponseRedirect('all-news')
+        else:
+            errors = register_form.errors
+            register_form = ExtendedUserRegisterForm()
+            return render(request, 'app_news/register.html', context={'form': register_form, 'errors': errors})
 
 
 class NewsListView(View):
