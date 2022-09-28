@@ -1,5 +1,5 @@
 from django import forms
-from .models import News, Comment
+from .models import News, Comment, UserProfile
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -10,6 +10,8 @@ from django.contrib.auth import password_validation
 class ExtendedUserRegisterForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=False, label='Имя')
     last_name = forms.CharField(max_length=30, required=False, label='Фамилия')
+    phone = forms.CharField(max_length=10, required=False, label='Телефон')
+    town = forms.CharField(max_length=10, required=False, label='Город')
     password1 = forms.CharField(
         label=_("Пароль"),
         strip=False,
@@ -23,9 +25,15 @@ class ExtendedUserRegisterForm(UserCreationForm):
         help_text=_("Введите пароль ещё раз"),
     )
 
+    def save(self, commit=True):
+        super().save()
+        UserProfile.objects.create(user=User.objects.get(username=self.cleaned_data["username"]),
+                                   phone=self.cleaned_data["phone"],
+                                   town=self.cleaned_data["town"])
+
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'password1', 'password2', )
+        fields = ('username', 'first_name', 'last_name', 'phone', 'town', 'password1', 'password2', )
         labels = {
             'username': _('Логин'),
         }

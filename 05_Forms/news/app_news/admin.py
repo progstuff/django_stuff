@@ -22,9 +22,9 @@ class NewsAdmin(admin.ModelAdmin):
     set_not_active.short_description = 'сделать не активной'
 
 
-#@admin.register(UserProfile)
-#class UserAdmin(admin.ModelAdmin):
-#    list_display = ['user_name']
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ['user']
 
 
 @admin.register(Comment)

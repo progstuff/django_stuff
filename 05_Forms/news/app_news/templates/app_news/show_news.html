@@ -10,7 +10,7 @@
 <html>
 
     {% if request.user.is_authenticated %}
-    <p>Привет, {{request.user}} <a href="/logout">Выйти</a></p>
+    <p>Привет, <a href="/user_page">{{request.user}}</a> <a href="/logout">Выйти</a></p>
     <form action="" method="post">
          {% csrf_token %}
         <button type="submit">Создать новость</button>

@@ -1,7 +1,7 @@
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .models import News, Comment
+from .models import News, Comment, UserProfile
 from .forms import NewsForm, AuthForm, get_comment_form, ExtendedUserRegisterForm
 from django.views import View
 from django.views.generic import TemplateView
@@ -9,6 +9,15 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.models import User
 
+
+class UserPage(TemplateView):
+    template_name = 'app_news/user_page.html'
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        data = UserProfile.objects.all()
+        user_profile = data.get(user=user)
+        return render(request, 'app_news/user_page.html', context={'user_profile': user_profile})
 
 class RegisterView(View):
 
@@ -20,6 +29,7 @@ class RegisterView(View):
         register_form = ExtendedUserRegisterForm(request.POST)
         if register_form.is_valid():
             register_form.save()
+
             return HttpResponseRedirect('all-news')
         else:
             errors = register_form.errors

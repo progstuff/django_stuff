@@ -16,8 +16,12 @@ def fill_db(apps, schema_editor):
     comments.objects.all().delete()
 
     users = apps.get_model('auth', 'User')
+    users_profiles = apps.get_model('app_news', 'UserProfile')
     for i in range(1, 5):
         users.objects.create(username='User_{}'.format(i), password='User_{}'.format(i))
+        user = users.objects.get(username='User_{}'.format(i))
+        users_profiles.objects.create(user=user, phone=str(i)*10, town='Город {}'.format(i))
+
 
     for i in range(1, 20):
         for j in range(1, randint(2, 10)):

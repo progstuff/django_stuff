@@ -9,4 +9,5 @@ urlpatterns = [
     path('change-news/create', views.NewsCreateView.as_view(), name='create_news'),
     path('all-news/<int:news_id>/comments', views.CommentsListView.as_view(), name='comments'),
     path('register', views.RegisterView.as_view(), name='register_user'),
+    path('user_page', views.UserPage.as_view(), name='user_page'),
 ]
