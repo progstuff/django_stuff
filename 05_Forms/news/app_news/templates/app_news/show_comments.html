@@ -11,9 +11,9 @@
 <h2>{{comment.news.title}}</h2>
 {% endif %}
 {%if comment.is_anonim is True%}
-    <h3>{{comment.user}} анонимный</h3>
+    <h3>{{comment.user.username}} анонимный</h3>
 {% else %}
-    <h3>{{comment.user}}</h3>
+    <h3>{{comment.user.username}}</h3>
 {% endif %}
 
 <p>{{comment.description}}</p>

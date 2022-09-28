@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import News, Comment, User
+from .models import News, Comment, UserProfile
 
 class CommentInline(admin.TabularInline):
     model = Comment
@@ -22,9 +22,9 @@ class NewsAdmin(admin.ModelAdmin):
     set_not_active.short_description = 'сделать не активной'
 
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ['user_name']
+#@admin.register(UserProfile)
+#class UserAdmin(admin.ModelAdmin):
+#    list_display = ['user_name']
 
 
 @admin.register(Comment)

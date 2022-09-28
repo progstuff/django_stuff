@@ -1,12 +1,13 @@
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .models import News, Comment, User
+from .models import News, Comment
 from .forms import NewsForm, AuthForm, get_comment_form, ExtendedUserRegisterForm
 from django.views import View
 from django.views.generic import TemplateView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LogoutView
+from django.contrib.auth.models import User
 
 
 class RegisterView(View):
@@ -93,11 +94,11 @@ class CommentsListView(View):
                 user_name = request.user.username
             else:
                 user_name = request.POST['user']
-
             try:
-                user = User.objects.get(user_name=user_name)
+                user = User.objects.get(username=user_name)
+
             except User.DoesNotExist:
-                user = User.objects.create(user_name=user_name)
+                user = User.objects.create(username=user_name, password=user_name)
 
             Comment.objects.create(user=user,
                                    description=request.POST['description'],

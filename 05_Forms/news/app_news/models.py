@@ -1,5 +1,6 @@
 from django.db import models
 from django.template.defaultfilters import truncatechars
+from django.contrib.auth.models import User
 
 
 class News(models.Model):
@@ -17,12 +18,19 @@ class News(models.Model):
         return self.title
 
 
-class User(models.Model):
-
-    user_name = models.CharField(max_length=100, default='', verbose_name='Пользователь')
+class UserProfile(models.Model):
+    VERIFICATION_STATUS_CHOICES = [
+        (True, 'да'),
+        (False, 'нет')
+    ]
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=10, default=None, verbose_name='Телефон')
+    town = models.CharField(max_length=100, default=None, verbose_name='Город')
+    news_cnt = models.IntegerField(default=0, verbose_name='Количество новостей')
+    verification = models.BooleanField(default=False, choices=VERIFICATION_STATUS_CHOICES, verbose_name='Верифицирован')
 
     def __str__(self):
-        return self.user_name
+        return self.user.username
 
 
 class Comment(models.Model):
@@ -31,7 +39,7 @@ class Comment(models.Model):
         ('d', 'удалено администратором')
     ]
 
-    user = models.ForeignKey('User', default=None, null=True, on_delete=models.CASCADE,
+    user = models.ForeignKey(User, default=None, null=True, on_delete=models.CASCADE,
                              related_name="user", verbose_name='Пользователь')
     description = models.TextField(max_length=10000, verbose_name='Комментарий')
     create_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')

@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app_news', '0006_fill_db2'),
+        ('app_news', '0005_auto_20220924_2126'),
     ]
 
     operations = [

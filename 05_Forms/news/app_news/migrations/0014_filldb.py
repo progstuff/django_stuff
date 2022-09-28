@@ -15,15 +15,14 @@ def fill_db(apps, schema_editor):
     comments = apps.get_model('app_news', 'Comment')
     comments.objects.all().delete()
 
-    users = apps.get_model('app_news', 'User')
-    users.objects.all().delete()
+    users = apps.get_model('auth', 'User')
     for i in range(1, 5):
-        users.objects.create(user_name='Пользователь {}'.format(i))
+        users.objects.create(username='User_{}'.format(i), password='User_{}'.format(i))
 
     for i in range(1, 20):
         for j in range(1, randint(2, 10)):
-            user_name = 'Пользователь {}'.format(randint(1, 4))
-            comments.objects.create(user=users.objects.get(user_name=user_name),
+            user_name = 'User_{}'.format(randint(1, 4))
+            comments.objects.create(user=users.objects.get(username=user_name),
                                     description='Комментарий {}'.format(j),
                                     news=news.objects.get(title='Новость {}'.format(i)))
 
@@ -31,7 +30,7 @@ def fill_db(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app_news', '0005_auto_20220924_2126'),
+        ('app_news', '0013_auto_20220928_1608'),
     ]
 
     operations = [migrations.RunPython(fill_db)]
