@@ -32,6 +32,13 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+    class Meta:
+        permissions = (
+            ('usual_user', 'обычный пользователь'),
+            ('verificated_user', 'верифицированный пользователь'),
+            ('moderator', 'модератор')
+        )
+
 
 class Comment(models.Model):
     STATUS_CHOICES = [
