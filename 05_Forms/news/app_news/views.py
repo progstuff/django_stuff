@@ -19,6 +19,17 @@ class UserPage(TemplateView):
         user_profile = data.get(user=user)
         return render(request, 'app_news/user_page.html', context={'user_profile': user_profile})
 
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        data = UserProfile.objects.all()
+        user_profile = data.get(user=user)
+        if request.POST['data'] == 'moderator_request':
+            user_profile.user_request = 1
+        if request.POST['data'] == 'verified_request':
+            user_profile.user_request = 2
+        user_profile.save()
+        return render(request, 'app_news/user_page.html', context={'user_profile': user_profile})
+
 class RegisterView(View):
 
     def get(self, request, *args, **kwargs):

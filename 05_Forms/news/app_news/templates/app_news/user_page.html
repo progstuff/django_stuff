@@ -11,6 +11,41 @@
 <h3>Телефон</h3> <p>{{user_profile.phone}}</p>
 <h3>Город</h3> <p>{{user_profile.town}}</p>
 <h3>Новостей добавлено</h3> <p>{{user_profile.news_cnt}}</p>
+
+{% if user_profile.user_state == 0 %}
+<h3>Группа </h3> <p>Пользователь</p>
+{% elif user_profile.user_state == 1 %}
+<h3>Группа </h3> <p>Верифицированный пользователь</p>
+{% elif user_profile.user_state == 2 %}
+<h3>Группа </h3> <p>Модератор</p>
+{% endif %}
+
+{% if user_profile.user_state == 0 %}
+    {% if user_profile.user_request == 0 %}
+        <form action="" method="post">
+            {% csrf_token %}
+            <button name="data" value="verified_request" type="submit">Стать верифицированным пользователем</button>
+        </form>
+    {% endif %}
+{% elif user_profile.user_state == 1 %}
+    {% if user_profile.user_request == 0 %}
+        <form action="" method="post">
+            {% csrf_token %}
+            <button name="data" value="moderator_request" type="submit">Стать модератором</button>
+        </form>
+    {% endif %}
+{% endif %}
+
+{% elif user_profile.user_state == 2 %}
+    
+{% endif %}
+
+{% if user_profile.user_request == 1 %}
+    <p> Запрос на верификацию отправлен </p>
+{% elif user_profile.user_request == 2 %}
+    <p> Ваша заявка стать модератором рассматривается </p>
+{% endif %}
+
 <a href="/all-news">Назад</a>
 </body>
 </html>

@@ -24,7 +24,7 @@ class NewsAdmin(admin.ModelAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ['user']
+    list_display = ['user', 'user_state', 'user_request']
 
 
 @admin.register(Comment)

@@ -19,15 +19,26 @@ class News(models.Model):
 
 
 class UserProfile(models.Model):
-    VERIFICATION_STATUS_CHOICES = [
+    STATUS_CHOICES = [
         (True, 'да'),
         (False, 'нет')
+    ]
+    USER_STATE = [
+        (0, 'Обычный пользователь'),
+        (1, 'Верифицированный пользователь'),
+        (2, 'Модератор пользователь')
+    ]
+    USER_REQUESTS = [
+        (0, 'Нет'),
+        (1, 'Запрос верификации'),
+        (2, 'Стать модератором')
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=10, default=None, verbose_name='Телефон')
     town = models.CharField(max_length=100, default=None, verbose_name='Город')
     news_cnt = models.IntegerField(default=0, verbose_name='Количество новостей')
-    verification = models.BooleanField(default=False, choices=VERIFICATION_STATUS_CHOICES, verbose_name='Верифицирован')
+    user_state = models.BooleanField(default=0, choices=USER_STATE, verbose_name='Статус')
+    user_request = models.BooleanField(default=0, choices=USER_REQUESTS, verbose_name='Запрос')
 
     def __str__(self):
         return self.user.username
