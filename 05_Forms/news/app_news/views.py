@@ -17,7 +17,14 @@ class UserPage(TemplateView):
         user = request.user
         data = UserProfile.objects.all()
         user_profile = data.get(user=user)
-        return render(request, 'app_news/user_page.html', context={'user_profile': user_profile})
+        users = {}
+        news = {}
+        #if user.has_perm('app_news_moderator_userprofile'):
+
+
+        return render(request, 'app_news/user_page.html', context={'user_profile': user_profile,
+                                                                   'users': users,
+                                                                   'news': news})
 
     def post(self, request, *args, **kwargs):
         user = request.user
@@ -28,7 +35,9 @@ class UserPage(TemplateView):
         if request.POST['data'] == 'verified_request':
             user_profile.user_request = 2
         user_profile.save()
-        return render(request, 'app_news/user_page.html', context={'user_profile': user_profile})
+        return render(request, 'app_news/user_page.html', context={'user_profile': user_profile,
+                                                                   'users': '',
+                                                                   'news': ''})
 
 class RegisterView(View):
 
