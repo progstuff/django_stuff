@@ -8,6 +8,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 
 class UserPage(TemplateView):
@@ -15,12 +16,16 @@ class UserPage(TemplateView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
-        data = UserProfile.objects.all()
-        user_profile = data.get(user=user)
+
         users = {}
         news = {}
-        #if user.has_perm('app_news_moderator_userprofile'):
-
+        if user.has_perm('app_news.moderator_userprofile'):
+            users = UserProfile.objects.filter(Q(user_request=1) | Q(user_request=2))
+            data = UserProfile.objects.all()
+            try:
+                user_profile = data.get(user=user)
+            except UserProfile.DoesNotExist:
+                user_profile = UserProfile.objects.create(user=user, phone="-", town='-', user_state=2)
 
         return render(request, 'app_news/user_page.html', context={'user_profile': user_profile,
                                                                    'users': users,

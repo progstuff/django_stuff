@@ -2,6 +2,7 @@
 
 from django.db import migrations
 from random import randint
+from django.contrib.auth.hashers import make_password
 
 
 def fill_db(apps, schema_editor):
@@ -18,10 +19,15 @@ def fill_db(apps, schema_editor):
     users = apps.get_model('auth', 'User')
     users_profiles = apps.get_model('app_news', 'UserProfile')
     for i in range(1, 5):
-        users.objects.create(username='User_{}'.format(i), password='User_{}'.format(i))
-        user = users.objects.get(username='User_{}'.format(i))
-        users_profiles.objects.create(user=user, phone=str(i)*10, town='Город {}'.format(i))
 
+        if i == 2 or i == 3: # пользователи с запросом верификации
+            users.objects.create(username='User_{}'.format(i), password=make_password('User_{}'.format(i)))
+            user = users.objects.get(username='User_{}'.format(i))
+            users_profiles.objects.create(user=user, phone=str(i)*10, town='Город {}'.format(i), user_request=1)
+        else: # обычный пользователь
+            users.objects.create(username='User_{}'.format(i), password=make_password('User_{}'.format(i)))
+            user = users.objects.get(username='User_{}'.format(i))
+            users_profiles.objects.create(user=user, phone=str(i) * 10, town='Город {}'.format(i))
 
     for i in range(1, 20):
         for j in range(1, randint(2, 10)):
@@ -34,7 +40,7 @@ def fill_db(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app_news', '0013_auto_20220928_1608'),
+        ('app_news', '0017_auto_20220930_1522'),
     ]
 
     operations = [migrations.RunPython(fill_db)]

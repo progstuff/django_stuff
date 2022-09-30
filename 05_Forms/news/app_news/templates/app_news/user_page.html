@@ -36,8 +36,13 @@
     {% endif %}
 {% endif %}
 
-{% elif user_profile.user_state == 2 %}
-
+{% if user_profile.user_state == 2 %}
+    {% if users|length == 2 %}
+<h3>Запросы пользователей</h3>
+        {% for user in users %}
+<p> {{ user.user.username }} </p>
+        {% endfor %}
+    {% endif %}
 {% endif %}
 
 {% if user_profile.user_request == 1 %}

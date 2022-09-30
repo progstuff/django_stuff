@@ -26,7 +26,7 @@ class UserProfile(models.Model):
     USER_STATE = [
         (0, 'Обычный пользователь'),
         (1, 'Верифицированный пользователь'),
-        (2, 'Модератор пользователь')
+        (2, 'Модератор')
     ]
     USER_REQUESTS = [
         (0, 'Нет'),
@@ -37,8 +37,8 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=10, default=None, verbose_name='Телефон')
     town = models.CharField(max_length=100, default=None, verbose_name='Город')
     news_cnt = models.IntegerField(default=0, verbose_name='Количество новостей')
-    user_state = models.BooleanField(default=0, choices=USER_STATE, verbose_name='Статус')
-    user_request = models.BooleanField(default=0, choices=USER_REQUESTS, verbose_name='Запрос')
+    user_state = models.IntegerField(default=0, choices=USER_STATE, verbose_name='Статус')
+    user_request = models.IntegerField(default=0, choices=USER_REQUESTS, verbose_name='Запрос')
 
     def __str__(self):
         return self.user.username
