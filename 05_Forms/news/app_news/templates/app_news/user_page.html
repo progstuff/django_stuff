@@ -37,10 +37,23 @@
 {% endif %}
 
 {% if user_profile.user_state == 2 %}
-    {% if users|length == 2 %}
+    {% if users|length > 0 %}
 <h3>Запросы пользователей</h3>
         {% for user in users %}
-<p> {{ user.user.username }} </p>
+<form method="post">
+    {% csrf_token %}
+    <P>
+    <LABEL for="username">{{user.user.username}} </LABEL>
+            {% if user.user_request == 1 %}
+        <button id= "username" name="data" value="{{user.user.username}}:ver:ok" type="submit">Подтвердить верификацю</button>
+        <button name="data_no" value="{{user.user.username}}:ver:no" type="submit">Отклонить</button>
+            {% else %}
+        <button id= "data" name="data" value="{{user.user.username}}:mod:ok" type="submit">Сделать модератором</button>
+        <button name="data_no" value="{{user.user.username}}:mod:no" type="submit">Отклонить</button>
+            {% endif %}
+    </P>
+ </form>
+
         {% endfor %}
     {% endif %}
 {% endif %}

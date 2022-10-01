@@ -7,7 +7,7 @@ from django.views import View
 from django.views.generic import TemplateView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LogoutView
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.db.models import Q
 
 
@@ -16,16 +16,19 @@ class UserPage(TemplateView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
-
+        data = UserProfile.objects.all()
         users = {}
         news = {}
-        if user.has_perm('app_news.moderator_userprofile'):
+        permissions = Permission.objects.filter(user=request.user)
+        permission = Permission.objects.get(codename='moderator')
+        if user.has_perm('app_news.moderator_userprofile') or permission in permissions:
             users = UserProfile.objects.filter(Q(user_request=1) | Q(user_request=2))
-            data = UserProfile.objects.all()
             try:
                 user_profile = data.get(user=user)
             except UserProfile.DoesNotExist:
                 user_profile = UserProfile.objects.create(user=user, phone="-", town='-', user_state=2)
+        else:
+            user_profile = data.get(user=user)
 
         return render(request, 'app_news/user_page.html', context={'user_profile': user_profile,
                                                                    'users': users,
@@ -34,15 +37,55 @@ class UserPage(TemplateView):
     def post(self, request, *args, **kwargs):
         user = request.user
         data = UserProfile.objects.all()
-        user_profile = data.get(user=user)
-        if request.POST['data'] == 'moderator_request':
-            user_profile.user_request = 1
-        if request.POST['data'] == 'verified_request':
-            user_profile.user_request = 2
-        user_profile.save()
+        users = {}
+        news = {}
+
+        permissions = Permission.objects.filter(user=request.user)
+        permission = Permission.objects.get(codename='moderator')
+        if user.has_perm('app_news.moderator_userprofile') or permission in permissions:
+            req_data = request.POST.get('data', None)
+
+            if req_data is not None:
+                req_data = req_data.split(':')
+                usr = User.objects.get(username=req_data[0])
+                usr_profile = data.get(user=usr)
+                if req_data[2] == 'ok':
+                    if req_data[1] == 'ver':
+                        usr_profile.user_state = 1
+                        permission = Permission.objects.get(codename='verificateduser')
+                        usr.user_permissions.add(permission)
+
+                    elif req_data[1] == 'mod':
+                        usr_profile.user_state = 2
+                        permission = Permission.objects.get(codename='moderator')
+                        usr.user_permissions.add(permission)
+            else:
+                req_data = request.POST['data_no'].split(':')
+                usr = User.objects.get(username=req_data[0])
+                usr_profile = data.get(user=usr)
+
+            usr_profile.user_request = 0
+            usr_profile.save()
+
+            users = UserProfile.objects.filter(Q(user_request=1) | Q(user_request=2))
+            news = News.objects.filter(is_active=False).forder_by('-create_date')
+            data = UserProfile.objects.all()
+            try:
+                user_profile = data.get(user=user)
+            except UserProfile.DoesNotExist:
+                user_profile = UserProfile.objects.create(user=user, phone="-", town='-', user_state=2)
+        else:
+            user_profile = data.get(user=user)
+            if request.POST['data'] == 'moderator_request':
+                user_profile.user_request = 2
+                user_profile.save()
+            elif request.POST['data'] == 'verified_request':
+                user_profile.user_request = 1
+                user_profile.save()
+
         return render(request, 'app_news/user_page.html', context={'user_profile': user_profile,
-                                                                   'users': '',
-                                                                   'news': ''})
+                                                                   'users': users,
+                                                                   'news': news})
 
 class RegisterView(View):
 
@@ -65,8 +108,16 @@ class RegisterView(View):
 class NewsListView(View):
 
     def get(self, request):
-        news = News.objects.all().order_by('-create_date')
-        return render(request, 'app_news/show_news.html', context={'all_news': news})
+        news = News.objects.filter(is_active=True).order_by('-create_date')
+        user = request.user
+        is_has_perm = False
+        if not user.is_anonymous:
+            permissions = Permission.objects.filter(user=request.user)
+            permission = Permission.objects.get(codename='verificateduser')
+            is_has_perm = user.has_perm('app_news.verificateduser_userprofile') or (permission in permissions)
+        return render(request, 'app_news/show_news.html', context={'all_news': news,
+                                                                   'username': user.username,
+                                                                   'is_has_perm': is_has_perm})
 
     def post(self, request):
         return HttpResponseRedirect('change-news/create')
@@ -155,8 +206,11 @@ class LogInView(TemplateView):
             username = auth_form.cleaned_data['username']
             password = auth_form.cleaned_data['password']
             user = authenticate(username=username, password=password)
+
             if user:
                 if user.is_active:
+                    user_profile = UserProfile.objects.get(user=user)
+                    add_permission(user, user_profile)
                     login(request, user)
                     return HttpResponseRedirect('/all-news')
                 else:
@@ -174,3 +228,12 @@ class LogOutView(LogoutView):
     template_name = "app_news/logout.html"
 
 
+def add_permission(user, user_profile):
+    if user_profile.user_state == 1:
+        permission = Permission.objects.get(codename='verificateduser')
+        user.user_permissions.add(permission)
+        user.save()
+    elif user_profile.user_state == 2:
+        permission = Permission.objects.get(codename='moderator')
+        user.user_permissions.add(permission)
+        user.save()

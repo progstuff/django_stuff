@@ -8,6 +8,8 @@ class News(models.Model):
         (True, 'активная'),
         (False, 'не активная')
     ]
+    user = models.ForeignKey(User, default=None, null=True, on_delete=models.CASCADE,
+                             related_name="user_news", verbose_name='Пользователь')
     title = models.CharField(max_length=1000, default='', verbose_name='заголовок')
     description = models.TextField(max_length=10000, verbose_name='Описание')
     create_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
@@ -45,8 +47,8 @@ class UserProfile(models.Model):
 
     class Meta:
         permissions = (
-            ('usual_user', 'обычный пользователь'),
-            ('verificated_user', 'верифицированный пользователь'),
+            ('usualuser', 'обычный пользователь'),
+            ('verificateduser', 'верифицированный пользователь'),
             ('moderator', 'модератор')
         )
 
@@ -54,7 +56,7 @@ class UserProfile(models.Model):
 class Comment(models.Model):
     STATUS_CHOICES = [
         ('p', 'опубликовано'),
-        ('d', 'удалено администратором')
+        ('d', 'на рассмотрении')
     ]
 
     user = models.ForeignKey(User, default=None, null=True, on_delete=models.CASCADE,

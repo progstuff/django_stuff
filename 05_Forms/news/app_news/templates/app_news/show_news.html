@@ -11,10 +11,12 @@
 
     {% if request.user.is_authenticated %}
     <p>Привет, <a href="/user_page">{{request.user}}</a> <a href="/logout">Выйти</a></p>
+        {% if is_has_perm %}
     <form action="" method="post">
          {% csrf_token %}
         <button type="submit">Создать новость</button>
     </form>
+        {% endif %}
     {% else %}
         <p><a href="/register">Регистрация</a> <a href="/login">Войти</a></p>
     {% endif %}
@@ -25,8 +27,11 @@
     {% for news in all_news %}
         <h2><a href="/all-news/{{news.id}}/comments">{{ news.title }}</a> </h2>
         <p>{{ news.create_date }}</p>
+        {% if news.user.username == username %}
         <p> <a href="change-news/{{news.id}}">Редактировать</a></p>
+        {% endif %}
         <h3>{{ news.description }}</h3>
+
     {% endfor %}
 
 </html>
