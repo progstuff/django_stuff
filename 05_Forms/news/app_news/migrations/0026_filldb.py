@@ -35,10 +35,17 @@ def fill_db(apps, schema_editor):
     news.objects.all().delete()
     for i in range(1, 20):
         user_name = 'User_{}'.format(randint(6, 7))
-        news.objects.create(user=users.objects.get(username=user_name),
-                            title='Новость {}'.format(i),
-                            description=('Описание {} '.format(i))*30,
-                            is_active=True)
+        ch = randint(1, 2)
+        if ch == 1:
+            news.objects.create(user=users.objects.get(username=user_name),
+                                title='Новость {}'.format(i),
+                                description=('Описание {} '.format(i))*30,
+                                is_active=True)
+        else:
+            news.objects.create(user=users.objects.get(username=user_name),
+                                title='Новость {}'.format(i),
+                                description=('Описание {} '.format(i)) * 30,
+                                is_active=False)
 
     for i in range(1, 20):
         for j in range(1, randint(2, 10)):

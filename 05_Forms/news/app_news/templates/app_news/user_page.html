@@ -58,6 +58,26 @@
     {% endif %}
 {% endif %}
 
+{% if user_profile.user_state == 2 or user_profile.user_state == 1%}
+    {% if news|length > 0 %}
+<h3>Новости на рассмотрение</h3>
+        {% for nws in news %}
+
+            <h3>{{ nws.title }}</a> </h3>
+            <p>{{ nws.create_date }}</p>
+            <p>{{ nws.description }}</p>
+
+            {% if user_profile.user_state == 2 %}
+            <form method="post">
+                    {% csrf_token %}
+                    <button name="n_data" value="{{nws.id}}" type="submit">Опубликовать</button>
+                    <button name="n_data_no" value="{{nws.id}}" type="submit">Отклонить</button>
+             </form>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endif %}
+
 {% if user_profile.user_request == 1 %}
     <p> Запрос на верификацию отправлен </p>
 {% elif user_profile.user_request == 2 %}

@@ -20,13 +20,18 @@ class UserPage(TemplateView):
         users = {}
         news = {}
         permissions = Permission.objects.filter(user=request.user)
-        permission = Permission.objects.get(codename='moderator')
-        if user.has_perm('app_news.moderator_userprofile') or permission in permissions:
+        moderator_permission = Permission.objects.get(codename='moderator')
+        veruser_permission = Permission.objects.get(codename='verificateduser')
+        if user.has_perm('app_news.moderator_userprofile') or moderator_permission in permissions:
             users = UserProfile.objects.filter(Q(user_request=1) | Q(user_request=2))
             try:
                 user_profile = data.get(user=user)
             except UserProfile.DoesNotExist:
                 user_profile = UserProfile.objects.create(user=user, phone="-", town='-', user_state=2)
+            news = News.objects.filter(is_active=False).order_by('-create_date')
+        elif veruser_permission in permissions:
+            user_profile = data.get(user=user)
+            news = News.objects.filter(Q(is_active=False) & Q(user=user)).order_by('-create_date')
         else:
             user_profile = data.get(user=user)
 
@@ -41,8 +46,9 @@ class UserPage(TemplateView):
         news = {}
 
         permissions = Permission.objects.filter(user=request.user)
-        permission = Permission.objects.get(codename='moderator')
-        if user.has_perm('app_news.moderator_userprofile') or permission in permissions:
+        moderator_permission = Permission.objects.get(codename='moderator')
+        veruser_permission = Permission.objects.get(codename='verificateduser')
+        if user.has_perm('app_news.moderator_userprofile') or moderator_permission in permissions:
             req_data = request.POST.get('data', None)
 
             if req_data is not None:
@@ -59,21 +65,33 @@ class UserPage(TemplateView):
                         usr_profile.user_state = 2
                         permission = Permission.objects.get(codename='moderator')
                         usr.user_permissions.add(permission)
+                usr_profile.user_request = 0
+                usr_profile.save()
+            elif request.POST.get('n_data', None) is not None:
+                nws = News.objects.get(id=request.POST['n_data'])
+                nws.is_active = True
+                nws.save()
+            elif request.POST.get('n_data_no', None) is not None:
+                nws = News.objects.get(id=request.POST['n_data_no'])
+                profile = UserProfile.objects.get(user=nws.user)
+                profile.news_cnt = News.objects.filter(user=nws.user).count() - 1
+                profile.save()
+                News.objects.filter(id=request.POST['n_data_no']).delete()
             else:
                 req_data = request.POST['data_no'].split(':')
                 usr = User.objects.get(username=req_data[0])
                 usr_profile = data.get(user=usr)
 
-            usr_profile.user_request = 0
-            usr_profile.save()
+                usr_profile.user_request = 0
+                usr_profile.save()
 
             users = UserProfile.objects.filter(Q(user_request=1) | Q(user_request=2))
-            news = News.objects.filter(is_active=False).forder_by('-create_date')
             data = UserProfile.objects.all()
             try:
                 user_profile = data.get(user=user)
             except UserProfile.DoesNotExist:
                 user_profile = UserProfile.objects.create(user=user, phone="-", town='-', user_state=2)
+            news = News.objects.filter(is_active=False).order_by('-create_date')
         else:
             user_profile = data.get(user=user)
             if request.POST['data'] == 'moderator_request':
@@ -82,6 +100,9 @@ class UserPage(TemplateView):
             elif request.POST['data'] == 'verified_request':
                 user_profile.user_request = 1
                 user_profile.save()
+
+            if veruser_permission in permissions:
+                news = News.objects.filter(Q(is_active=False) & Q(user=user)).order_by('-create_date')
 
         return render(request, 'app_news/user_page.html', context={'user_profile': user_profile,
                                                                    'users': users,
@@ -138,6 +159,7 @@ class NewsUpdateView(View):
         if news_form.is_valid():
             news.title = request.POST['title']
             news.description = request.POST['description']
+            news.is_active = False
             news.save()
         return render(request, 'app_news/change_news.html', context={'button_name': 'Обновить',
                                                                      'title': 'Редактировать новость',
@@ -155,8 +177,14 @@ class NewsCreateView(View):
     def post(self, request):
         news_form = NewsForm(request.POST)
         if news_form.is_valid():
-            News.objects.create(title=request.POST['title'],
-                                description=request.POST['description'])
+            user = request.user
+            News.objects.create(user=request.user,
+                                title=request.POST['title'],
+                                description=request.POST['description'],
+                                is_active=False)
+            profile = UserProfile.objects.get(user=user)
+            profile.news_cnt = News.objects.filter(user=user).count()
+            profile.save()
             return HttpResponseRedirect('/all-news')
         else:
             return render(request, 'app_news/change_news.html', context={'button_name': 'Создать',
