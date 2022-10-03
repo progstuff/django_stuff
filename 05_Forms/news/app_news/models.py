@@ -15,9 +15,11 @@ class News(models.Model):
     create_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     update_date = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     is_active = models.BooleanField(default=True, choices=STATUS_CHOICES, verbose_name='Активна')
+    tag = models.CharField(default='', max_length=10, verbose_name='Тег')
 
     def __str__(self):
         return self.title
+
 
 
 class UserProfile(models.Model):

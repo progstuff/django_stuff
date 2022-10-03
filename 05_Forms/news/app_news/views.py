@@ -129,7 +129,7 @@ class RegisterView(View):
 class NewsListView(View):
 
     def get(self, request):
-        news = News.objects.filter(is_active=True).order_by('-create_date')
+        news = News.objects.filter(is_active=True).order_by('tag', '-create_date')
         user = request.user
         is_has_perm = False
         if not user.is_anonymous:

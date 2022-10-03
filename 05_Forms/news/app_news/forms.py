@@ -50,7 +50,7 @@ class AuthForm(forms.Form):
 class NewsForm(forms.ModelForm):
     class Meta:
         model = News
-        fields = ['title', 'description']
+        fields = ['title', 'description', 'tag']
         help_texts = {
             'title': 'Введите заголовок',
             'description': 'Введите описание',

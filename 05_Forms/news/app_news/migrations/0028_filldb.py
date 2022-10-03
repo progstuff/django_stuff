@@ -40,12 +40,14 @@ def fill_db(apps, schema_editor):
             news.objects.create(user=users.objects.get(username=user_name),
                                 title='Новость {}'.format(i),
                                 description=('Описание {} '.format(i))*30,
-                                is_active=True)
+                                is_active=True,
+                                tag='Н_{}'.format(randint(1, 5)))
         else:
             news.objects.create(user=users.objects.get(username=user_name),
                                 title='Новость {}'.format(i),
                                 description=('Описание {} '.format(i)) * 30,
-                                is_active=False)
+                                is_active=False,
+                                tag='Н_{}'.format(randint(1, 5)))
 
     for i in range(1, 20):
         for j in range(1, randint(2, 10)):
@@ -64,7 +66,7 @@ def fill_db(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app_news', '0025_news_user'),
+        ('app_news', '0026_news_tag'),
     ]
 
     operations = [migrations.RunPython(fill_db)]

@@ -26,7 +26,7 @@
 
     {% for news in all_news %}
         <h2><a href="/all-news/{{news.id}}/comments">{{ news.title }}</a> </h2>
-        <p>{{ news.create_date }}</p>
+        <p>Дата {{ news.create_date }} Тэг {{ news.tag }}</p>
         {% if news.user.username == username %}
         <p> <a href="change-news/{{news.id}}">Редактировать</a></p>
         {% endif %}
