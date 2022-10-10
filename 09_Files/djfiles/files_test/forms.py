@@ -4,6 +4,11 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 
 
+class AuthForm(forms.Form):
+    username = forms.CharField(label='Логин')
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
+
+
 class UserRegisterForm(UserCreationForm):
     password1 = forms.CharField(
         label=_("Пароль"),
