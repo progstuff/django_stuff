@@ -7,7 +7,7 @@
 <body>
 
     {% if request.user.is_authenticated %}
-        <p>Привет, <a href="/user_page">{{request.user}}</a> <a href="/logout">Выйти</a></p>
+        <p>Привет, <a href="/user-page">{{request.user}}</a> <a href="/logout">Выйти</a></p>
     {% else %}
         <p><a href="/register-user">Регистрация</a> <a href="/login">Войти</a></p>
     {% endif %}
