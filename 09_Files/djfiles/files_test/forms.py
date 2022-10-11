@@ -4,11 +4,23 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from .models import Record
 from django.core.exceptions import ValidationError
+from .models import UserProfile
 
 
 class AuthForm(forms.Form):
     username = forms.CharField(label='Логин')
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
+
+
+class UserPageForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['first_name', 'last_name', 'about']
+        help_texts = {
+            'first_name': 'Введите имя',
+            'last_name': 'Введите фамилию',
+            'about': 'Добавьте информацию о себе'
+        }
 
 
 class UserRegisterForm(UserCreationForm):
