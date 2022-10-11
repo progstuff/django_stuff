@@ -5,6 +5,14 @@
     <title>Создать пост</title>
 </head>
 <body>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Создать</button>
+        {{errors}}
+    </form>
+
+<a href="/all-posts">На главную</a>
 
 </body>
 </html>

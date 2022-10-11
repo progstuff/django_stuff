@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.views import View
-from .forms import UserRegisterForm, AuthForm, UserPageForm
+from .forms import UserRegisterForm, AuthForm, UserPageForm, RecordForm
 from django.contrib.auth import authenticate, login
 from .models import Record
 
@@ -16,8 +16,11 @@ class AllPosts(TemplateView):
     template_name = 'files_test/all_posts.html'
 
     def get(self, request, *args, **kwargs):
-        all_posts = Record.objects.all()
+        all_posts = Record.objects.all().order_by('-create_date')
         return render(request, 'files_test/all_posts.html', context={'posts': all_posts})
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponseRedirect('create-post')
 
 
 class PostDetails(TemplateView):
@@ -66,6 +69,28 @@ class UserPage(View):
 
 class PostCreate(TemplateView):
     template_name = 'files_test/post_create.html'
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if not user.is_anonymous:
+            record_form = RecordForm()
+            return render(request, 'files_test/post_create.html', context={'form': record_form})
+        else:
+            return HttpResponseRedirect('all-posts')
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        if not user.is_anonymous:
+            record_form = RecordForm(request.POST)
+            if record_form.is_valid():
+                title = record_form.cleaned_data['title']
+                description = record_form.cleaned_data['description']
+                Record.objects.create(user=user, title=title, description=description)
+                return HttpResponseRedirect('all-posts')
+            else:
+                return render(request, 'files_test/post_create.html', context={'form': record_form})
+        else:
+            return HttpResponseRedirect('all-posts')
 
 
 class LogInView(TemplateView):
