@@ -6,10 +6,15 @@ from django.views.generic import TemplateView
 from django.views import View
 from .forms import UserRegisterForm, AuthForm
 from django.contrib.auth import authenticate, login
+from .models import Record
 
 
 class AllPosts(TemplateView):
     template_name = 'files_test/all_posts.html'
+
+    def get(self, request, *args, **kwargs):
+        all_posts = Record.objects.all()
+        return render(request, 'files_test/all_posts.html', context={'posts': all_posts})
 
 
 class PostDetails(TemplateView):
@@ -46,7 +51,7 @@ class LogInView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         auth_form = AuthForm()
-        return render(request, 'files_test/login_page.html', context={'form':auth_form})
+        return render(request, 'files_test/login_page.html', context={'form': auth_form})
 
 
 class RegisterPage(View):
