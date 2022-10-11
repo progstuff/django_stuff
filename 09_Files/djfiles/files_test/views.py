@@ -20,6 +20,10 @@ class AllPosts(TemplateView):
 class PostDetails(TemplateView):
     template_name = 'files_test/post_details.html'
 
+    def get(self, request, post_id):
+        post = Record.objects.get(id=post_id)
+        return render(request, 'files_test/post_details.html', context={'post': post})
+
 
 class UserPage(TemplateView):
     template_name = 'files_test/user_page.html'

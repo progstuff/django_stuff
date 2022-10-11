@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
+from .models import Record
+from django.core.exceptions import ValidationError
 
 
 class AuthForm(forms.Form):
@@ -32,3 +34,31 @@ class UserRegisterForm(UserCreationForm):
         help_texts = {
             'username': _('Буквы, цифры и @/./+/-/_'),
         }
+
+
+class RecordForm(forms.ModelForm):
+    class Meta:
+        model = Record
+        fields = ['title', 'description']
+        help_texts = {
+            'title': 'Введите заголовок',
+            'description': 'Введите описание',
+        }
+
+    def clean_title(self):
+        title = self.cleaned_data.get('title', False)
+        if title == '':
+            raise ValidationError(
+                _('Введите заголовок'),
+                params={'value': title},
+            )
+        return title
+
+    def clean_description(self):
+        description = self.cleaned_data.get('description', False)
+        if description == '':
+            raise ValidationError(
+                _('Введите описание'),
+                params={'value': description},
+            )
+        return description
