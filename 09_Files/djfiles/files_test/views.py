@@ -6,10 +6,8 @@ from django.views.generic import TemplateView
 from django.views import View
 from .forms import UserRegisterForm, AuthForm, UserPageForm, RecordForm
 from django.contrib.auth import authenticate, login
-from .models import Record
-
 from django.contrib.auth.views import LogoutView
-from .models import UserProfile
+from .models import UserProfile, RecordFiles, Record
 
 
 class AllPosts(TemplateView):
@@ -81,11 +79,13 @@ class PostCreate(TemplateView):
     def post(self, request, *args, **kwargs):
         user = request.user
         if not user.is_anonymous:
-            record_form = RecordForm(request.POST)
+            record_form = RecordForm(request.POST, request.FILES)
             if record_form.is_valid():
                 title = record_form.cleaned_data['title']
                 description = record_form.cleaned_data['description']
-                Record.objects.create(user=user, title=title, description=description)
+                file = request.FILES['file']
+                record = Record.objects.create(user=user, title=title, description=description)
+                RecordFiles.objects.create(record=record, file=file)
                 return HttpResponseRedirect('all-posts')
             else:
                 return render(request, 'files_test/post_create.html', context={'form': record_form})

@@ -14,6 +14,12 @@ class Record(models.Model):
         return self.title
 
 
+class RecordFiles(models.Model):
+    record = models.ForeignKey(Record, default=None, null=True, on_delete=models.CASCADE,
+                               related_name="record_image", verbose_name='Запись')
+    file = models.FileField(upload_to='files/')
+
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50, default=None, verbose_name='Имя')

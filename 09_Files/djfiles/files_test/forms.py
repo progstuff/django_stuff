@@ -49,6 +49,8 @@ class UserRegisterForm(UserCreationForm):
 
 
 class RecordForm(forms.ModelForm):
+    file = forms.FileField()
+
     class Meta:
         model = Record
         fields = ['title', 'description']
