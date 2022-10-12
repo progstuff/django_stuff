@@ -4,4 +4,4 @@ from .models import Record
 
 @admin.register(Record)
 class RecordAdmin(admin.ModelAdmin):
-    list_display = ['user', 'title', 'description', 'create_date', 'update_date']
+    list_display = ['user', 'description', 'create_date', 'update_date']

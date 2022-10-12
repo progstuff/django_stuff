@@ -57,20 +57,10 @@ class RecordForm(forms.ModelForm):
 
     class Meta:
         model = Record
-        fields = ['title', 'description']
+        fields = ['description']
         help_texts = {
-            'title': 'Введите заголовок',
             'description': 'Введите описание',
         }
-
-    def clean_title(self):
-        title = self.cleaned_data.get('title', False)
-        if title == '':
-            raise ValidationError(
-                _('Введите заголовок'),
-                params={'value': title},
-            )
-        return title
 
     def clean_description(self):
         description = self.cleaned_data.get('description', False)
@@ -80,9 +70,4 @@ class RecordForm(forms.ModelForm):
                 params={'value': description},
             )
         return description
-
-    def clean(self):
-        if not (self.cleaned_data['title'] and self.cleaned_data['description']):
-            raise forms.ValidationError('Введите заголовок и описание')
-        return self.cleaned_data
 
