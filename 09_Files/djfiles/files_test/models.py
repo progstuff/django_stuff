@@ -16,8 +16,8 @@ class Record(models.Model):
 
 class RecordFiles(models.Model):
     record = models.ForeignKey(Record, default=None, null=True, on_delete=models.CASCADE,
-                               related_name="record_image", verbose_name='Запись')
-    file = models.FileField(upload_to='files/')
+                               related_name="record", verbose_name='Запись')
+    file = models.FileField(upload_to='files/', default=None, null=True)
 
 
 class UserProfile(models.Model):

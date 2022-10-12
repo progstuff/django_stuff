@@ -49,7 +49,7 @@ class UserRegisterForm(UserCreationForm):
 
 
 class RecordForm(forms.ModelForm):
-    file = forms.FileField()
+    file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
 
     class Meta:
         model = Record
@@ -76,3 +76,9 @@ class RecordForm(forms.ModelForm):
                 params={'value': description},
             )
         return description
+
+    def clean(self):
+        if not (self.cleaned_data['title'] and self.cleaned_data['description']):
+            raise forms.ValidationError('Введите заголовок и описание')
+        return self.cleaned_data
+

@@ -83,9 +83,10 @@ class PostCreate(TemplateView):
             if record_form.is_valid():
                 title = record_form.cleaned_data['title']
                 description = record_form.cleaned_data['description']
-                file = request.FILES['file']
                 record = Record.objects.create(user=user, title=title, description=description)
-                RecordFiles.objects.create(record=record, file=file)
+                files = request.FILES.getlist('file')
+                for file in files:
+                    RecordFiles.objects.create(record=record, file=file)
                 return HttpResponseRedirect('all-posts')
             else:
                 return render(request, 'files_test/post_create.html', context={'form': record_form})
