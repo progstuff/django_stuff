@@ -14,8 +14,7 @@
         </form>
         <form action="" method="post">
          {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" name="create_several_records">Добавить записи из файла</button>
+            <button type="submit" name="create_several_records">Добавить несколько записей</button>
         </form>
     {% else %}
         <p><a href="/register-user">Регистрация</a> <a href="/login">Войти</a></p>

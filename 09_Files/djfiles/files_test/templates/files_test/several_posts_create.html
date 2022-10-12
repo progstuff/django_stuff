@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Создать несколько постов</title>
+</head>
+<body>
+    {% if request.user.is_authenticated %}
+        <form action="" method="post">
+         {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" name="create_several_records">Показать записи из файла</button>
+        </form>
+    {% endif %}
+
+<a href="/all-posts">На главную</a>
+
+</body>
+</html>

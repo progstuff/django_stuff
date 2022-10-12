@@ -9,4 +9,5 @@ urlpatterns = [
     path('logout', views.LogOutView.as_view(), name='logout-user'),
     path('user-page', views.UserPage.as_view(), name='user-page'),
     path('create-post', views.PostCreate.as_view(), name='create-post'),
+    path('create-several-posts', views.SeveralPostsCreate.as_view(), name='create-several-posts'),
 ]

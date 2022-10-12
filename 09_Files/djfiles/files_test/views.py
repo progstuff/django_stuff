@@ -15,11 +15,6 @@ class AllPosts(TemplateView):
 
     def get(self, request, *args, **kwargs):
         all_posts = Record.objects.all().order_by('-create_date')
-        user = request.user
-        if not user.is_anonymous:
-            form = RecordsLoadForm()
-            return render(request, 'files_test/all_posts.html', context={'posts': all_posts, 'form': form})
-
         return render(request, 'files_test/all_posts.html', context={'posts': all_posts})
 
     def post(self, request, *args, **kwargs):
@@ -27,13 +22,7 @@ class AllPosts(TemplateView):
             return HttpResponseRedirect('create-post')
 
         elif 'create_several_records' in request.POST:
-            all_posts = Record.objects.all().order_by('-create_date')
-            user = request.user
-            if not user.is_anonymous:
-                form = RecordsLoadForm()
-                return render(request, 'files_test/all_posts.html', context={'posts': all_posts, 'form': form})
-
-            return render(request, 'files_test/all_posts.html', context={'posts': all_posts})
+            return HttpResponseRedirect('create-several-posts')
 
 
 class PostDetails(TemplateView):
@@ -78,6 +67,23 @@ class UserPage(View):
                 return render(request, 'files_test/user_page.html', context={'form': user_form, 'errors': errors.__str__()})
         else:
             return HttpResponseRedirect('all-posts')
+
+
+class SeveralPostsCreate(TemplateView):
+    template_name = 'files_test/several_posts_create.html'
+
+    def get(self, request, *args, **kwargs):
+        form = RecordsLoadForm()
+        return render(request, 'files_test/several_posts_create.html', context={'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = RecordsLoadForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            pass
+
+        form = RecordsLoadForm()
+        return render(request, 'files_test/several_posts_create.html', context={'form': form})
 
 
 class PostCreate(TemplateView):
