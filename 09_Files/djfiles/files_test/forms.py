@@ -12,6 +12,10 @@ class AuthForm(forms.Form):
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
 
 
+class RecordsLoadForm(forms.Form):
+    file = forms.FileField()
+
+
 class UserPageForm(forms.ModelForm):
     class Meta:
         model = UserProfile
@@ -49,7 +53,7 @@ class UserRegisterForm(UserCreationForm):
 
 
 class RecordForm(forms.ModelForm):
-    file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False)
 
     class Meta:
         model = Record

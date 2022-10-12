@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.views import View
-from .forms import UserRegisterForm, AuthForm, UserPageForm, RecordForm
+from .forms import UserRegisterForm, AuthForm, UserPageForm, RecordForm, RecordsLoadForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LogoutView
 from .models import UserProfile, RecordFiles, Record
@@ -15,10 +15,25 @@ class AllPosts(TemplateView):
 
     def get(self, request, *args, **kwargs):
         all_posts = Record.objects.all().order_by('-create_date')
+        user = request.user
+        if not user.is_anonymous:
+            form = RecordsLoadForm()
+            return render(request, 'files_test/all_posts.html', context={'posts': all_posts, 'form': form})
+
         return render(request, 'files_test/all_posts.html', context={'posts': all_posts})
 
     def post(self, request, *args, **kwargs):
-        return HttpResponseRedirect('create-post')
+        if 'create_one_record' in request.POST:
+            return HttpResponseRedirect('create-post')
+
+        elif 'create_several_records' in request.POST:
+            all_posts = Record.objects.all().order_by('-create_date')
+            user = request.user
+            if not user.is_anonymous:
+                form = RecordsLoadForm()
+                return render(request, 'files_test/all_posts.html', context={'posts': all_posts, 'form': form})
+
+            return render(request, 'files_test/all_posts.html', context={'posts': all_posts})
 
 
 class PostDetails(TemplateView):
