@@ -8,6 +8,7 @@ from .forms import UserRegisterForm, AuthForm, UserPageForm, RecordForm, Records
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LogoutView
 from .models import UserProfile, RecordFiles, Record
+from datetime import datetime
 
 
 class AllPosts(TemplateView):
@@ -78,12 +79,24 @@ class SeveralPostsCreate(TemplateView):
 
     def post(self, request, *args, **kwargs):
         form = RecordsLoadForm(request.POST, request.FILES)
+        user = request.user
+        if not user.is_anonymous:
+            if form.is_valid():
+                records_file = form.cleaned_data['file'].read()
+                records = records_file.decode('utf-8').split('\r\n')
+                for record in records:
+                    if record != '':
+                        description, date = record.split(';')
+                        dt_object = datetime.strptime(date, "%d.%m.%Y")
+                        Record.objects.create(user=user,
+                                              description=description,
+                                              create_date=dt_object,
+                                              update_date=dt_object)
+                return HttpResponseRedirect('all-posts')
 
-        if form.is_valid():
-            pass
-
-        form = RecordsLoadForm()
-        return render(request, 'files_test/several_posts_create.html', context={'form': form})
+            form = RecordsLoadForm()
+            return render(request, 'files_test/several_posts_create.html', context={'form': form})
+        return HttpResponseRedirect('all-posts')
 
 
 class PostCreate(TemplateView):
@@ -102,9 +115,8 @@ class PostCreate(TemplateView):
         if not user.is_anonymous:
             record_form = RecordForm(request.POST, request.FILES)
             if record_form.is_valid():
-                title = record_form.cleaned_data['title']
                 description = record_form.cleaned_data['description']
-                record = Record.objects.create(user=user, title=title, description=description)
+                record = Record.objects.create(user=user, description=description)
                 files = request.FILES.getlist('file')
                 for file in files:
                     RecordFiles.objects.create(record=record, file=file)
