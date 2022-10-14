@@ -31,7 +31,12 @@ class PostDetails(TemplateView):
 
     def get(self, request, post_id):
         post = Record.objects.get(id=post_id)
-        return render(request, 'files_test/post_details.html', context={'post': post})
+        try:
+            images = RecordFiles.objects.filter(record=post)
+        except RecordFiles.DoesNotExist:
+            images = []
+        return render(request, 'files_test/post_details.html', context={'post': post,
+                                                                        'images': images})
 
 
 class UserPage(View):
@@ -83,7 +88,7 @@ class SeveralPostsCreate(TemplateView):
         if not user.is_anonymous:
             if form.is_valid():
                 records_file = form.cleaned_data['file'].read()
-                records = records_file.decode('utf-8').split('\r\n')
+                records = records_file.decode('utf-8').split('\n')
                 for record in records:
                     if record != '':
                         description, date = record.split(';')
