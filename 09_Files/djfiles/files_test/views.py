@@ -79,8 +79,11 @@ class SeveralPostsCreate(TemplateView):
     template_name = 'files_test/several_posts_create.html'
 
     def get(self, request, *args, **kwargs):
-        form = RecordsLoadForm()
-        return render(request, 'files_test/several_posts_create.html', context={'form': form})
+        user = request.user
+        if not user.is_anonymous:
+            form = RecordsLoadForm()
+            return render(request, 'files_test/several_posts_create.html', context={'form': form})
+        return HttpResponseRedirect('all-posts')
 
     def post(self, request, *args, **kwargs):
         form = RecordsLoadForm(request.POST, request.FILES)
@@ -159,6 +162,13 @@ class LogInView(TemplateView):
 
 class LogOutView(LogoutView):
     template_name = "files_test/logout.html"
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if not user.is_anonymous:
+            register_form = UserRegisterForm()
+            return render(request, 'files_test/register_page.html', context={'form': register_form})
+        return HttpResponseRedirect('all-posts')
 
 
 class RegisterPage(View):
