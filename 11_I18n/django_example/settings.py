@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'app_goods.apps.AppGoodsConfig',
     'app_users',
     'app_pages',
+    'app_test_locale'
 ]
 
 MIDDLEWARE = [
