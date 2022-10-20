@@ -7,5 +7,11 @@
 </head>
 <body>
     {% include 'shop/header.html' %}
+    <a href="/shops-list">На главную</a>
+    <h1>{{shop.name}}</h1>
+    {% for product in products %}
+        <h2>{{product.name}}</h2>
+        <h3>цена {{product.price}}</h3>
+    {% endfor %}
 </body>
 </html>
