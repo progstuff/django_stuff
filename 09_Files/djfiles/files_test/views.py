@@ -49,7 +49,7 @@ class UserPage(View):
             except UserProfile.DoesNotExist:
                 user_profile = UserProfile.objects.create(user=user, first_name='', last_name='', about='')
             user_form = UserPageForm(instance=user_profile)
-            return render(request, 'files_test/user_page.html', context={'form': user_form})
+            return render(request, 'files_test/page_user.html', context={'form': user_form})
         else:
             return HttpResponseRedirect('all-posts')
 
@@ -70,7 +70,7 @@ class UserPage(View):
 
                 user_form = UserPageForm(instance=user_profile)
 
-                return render(request, 'files_test/user_page.html', context={'form': user_form, 'errors': errors.__str__()})
+                return render(request, 'files_test/page_user.html', context={'form': user_form, 'errors': errors.__str__()})
         else:
             return HttpResponseRedirect('all-posts')
 
@@ -136,7 +136,7 @@ class PostCreate(TemplateView):
 
 
 class LogInView(TemplateView):
-    template_name = "files_test/login_page.html"
+    template_name = "files_test/page_login.html"
 
     def post(self, request, *args, **kwargs):
         auth_form = AuthForm(request.POST)
@@ -153,11 +153,11 @@ class LogInView(TemplateView):
                     auth_form.add_error('__all__', 'Учётная запись не активна')
             else:
                 auth_form.add_error('__all__', 'Ошибка в логине или пароле')
-        return render(request, 'files_test/login_page.html', context={'form': auth_form})
+        return render(request, 'files_test/page_login.html', context={'form': auth_form})
 
     def get(self, request, *args, **kwargs):
         auth_form = AuthForm()
-        return render(request, 'files_test/login_page.html', context={'form': auth_form})
+        return render(request, 'files_test/page_login.html', context={'form': auth_form})
 
 
 class LogOutView(LogoutView):

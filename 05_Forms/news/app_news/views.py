@@ -12,7 +12,7 @@ from django.db.models import Q
 
 
 class UserPage(TemplateView):
-    template_name = 'app_news/user_page.html'
+    template_name = 'app_news/page_user.html'
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -35,7 +35,7 @@ class UserPage(TemplateView):
         else:
             user_profile = data.get(user=user)
 
-        return render(request, 'app_news/user_page.html', context={'user_profile': user_profile,
+        return render(request, 'app_news/page_user.html', context={'user_profile': user_profile,
                                                                    'users': users,
                                                                    'news': news})
 
@@ -104,7 +104,7 @@ class UserPage(TemplateView):
             if veruser_permission in permissions:
                 news = News.objects.filter(Q(is_active=False) & Q(user=user)).order_by('-create_date')
 
-        return render(request, 'app_news/user_page.html', context={'user_profile': user_profile,
+        return render(request, 'app_news/page_user.html', context={'user_profile': user_profile,
                                                                    'users': users,
                                                                    'news': news})
 

@@ -24,7 +24,7 @@ class LoginPageTest(TestCase):
     def test_template_exist(self):
         url = reverse('login-user')
         response = self.client.get(url)
-        self.assertTemplateUsed(response, 'files_test/login_page.html')
+        self.assertTemplateUsed(response, 'files_test/page_login.html')
 
     def test_url_exist(self):
         response = self.client.get('/login')
