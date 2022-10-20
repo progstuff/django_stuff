@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
-from .forms import AuthForm
+from .forms import AuthForm, UserRegisterForm
 from django.contrib.auth import authenticate, login
 #from django.contrib.auth.views import LogoutView
 
@@ -16,6 +16,21 @@ class UserPageView(TemplateView):
 
 class RegistartionView(TemplateView):
     template_name = 'shop/page_registration.html'
+
+    def get(self, request, *args, **kwargs):
+        register_form = UserRegisterForm()
+        return render(request, 'shop/page_registration.html', context={'form': register_form})
+
+    def post(self, request):
+        register_form = UserRegisterForm(request.POST)
+        if register_form.is_valid():
+            register_form.save()
+            return HttpResponseRedirect('shops-list')
+        else:
+            errors = register_form.errors
+            register_form = UserRegisterForm()
+
+            return render(request, 'shop/page_registration.html', context={'form': register_form, 'errors': errors.__str__()})
 
 
 class ShopProductsView(TemplateView):
@@ -49,3 +64,4 @@ class LoginView(TemplateView):
     def get(self, request, *args, **kwargs):
         auth_form = AuthForm()
         return render(request, 'shop/page_login.html', context={'form': auth_form})
+

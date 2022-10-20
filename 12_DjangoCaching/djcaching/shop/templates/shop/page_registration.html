@@ -6,5 +6,13 @@
 </head>
 <body>
     {% include 'shop/element_language.html' %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit"> Зарегистрироваться </button>
+        {{errors}}
+    </form>
+
 </body>
 </html>
