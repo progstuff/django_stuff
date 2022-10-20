@@ -4,11 +4,14 @@ from django.http import HttpResponseRedirect
 from .forms import AuthForm, UserRegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LogoutView
-
+from .models import Shop
 
 class ShopsListView(TemplateView):
     template_name = 'shop/page_shops_list.html'
 
+    def get(self, request, *args, **kwargs):
+        shops_list = Shop.objects.all()
+        return render(request, 'shop/page_shops_list.html', context={'shops': shops_list})
 
 class UserPageView(TemplateView):
     template_name = 'shop/page_user.html'

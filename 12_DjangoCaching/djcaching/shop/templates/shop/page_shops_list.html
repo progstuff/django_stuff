@@ -9,5 +9,11 @@
 
     {% include 'shop/header.html' %}
 
+    {% for shop in shops %}
+    <h2> <a href="shop-products/{{shop.id}}">{{shop.name}}</a></h2>
+        <h3>{{shop.addres}}</h3>
+        <p></p>
+    {% endfor %}
+
 </body>
 </html>
