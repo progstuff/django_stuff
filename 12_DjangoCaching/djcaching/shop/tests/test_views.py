@@ -110,3 +110,35 @@ class ProductDetailsViewTest(TestCase):
         url = reverse('product-details')
         response = self.client.get(url)
         self.assertContains(response, '<select name="language">')
+
+
+class LoginViewTest(TestCase):
+
+    def test_url_exist(self):
+        response = self.client.get('/login')
+        self.assertEqual(response.status_code, 200)
+
+    def test_template_exist(self):
+        url = reverse('login')
+        response = self.client.get(url)
+        self.assertTemplateUsed(response, 'shop/page_login.html')
+
+    def test_answer_code(self):
+        url = reverse('login')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_language_form_exist(self):
+        url = reverse('login')
+        response = self.client.get(url)
+        self.assertContains(response, '<select name="language">')
+
+    def test_back_href_exist(self):
+        url = reverse('login')
+        response = self.client.get(url)
+        self.assertContains(response, 'На главную')
+
+    def test_login_form_exist(self):
+        url = reverse('login')
+        response = self.client.get(url)
+        self.assertContains(response, 'Вход')
