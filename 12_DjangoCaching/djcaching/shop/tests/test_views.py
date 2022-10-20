@@ -45,6 +45,11 @@ class RegistrationViewTest(TestCase):
         response = self.client.get(url)
         self.assertContains(response, '<select name="language">')
 
+    def test_register_form_exist(self):
+        url = reverse('registration')
+        response = self.client.get(url)
+        self.assertContains(response, 'Зарегистрироваться')
+
 
 class UserPageViewTest(TestCase):
 

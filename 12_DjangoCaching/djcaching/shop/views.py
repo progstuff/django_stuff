@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 from .forms import AuthForm, UserRegisterForm
-from django.contrib.auth import authenticate, login
-#from django.contrib.auth.views import LogoutView
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import LogoutView
 
 
 class ShopsListView(TemplateView):
@@ -39,6 +39,17 @@ class ShopProductsView(TemplateView):
 
 class ProductDetailsView(TemplateView):
     template_name = 'shop/page_product_details.html'
+
+
+class LogOutView(LogoutView):
+    template_name = "shop/page_logout.html"
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if not user.is_anonymous:
+            logout(request)
+        else:
+            return HttpResponseRedirect('shops-list')
 
 
 class LoginView(TemplateView):
