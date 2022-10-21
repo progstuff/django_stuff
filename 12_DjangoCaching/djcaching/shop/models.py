@@ -17,9 +17,6 @@ class Shop(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=1000, verbose_name=_('Название'))
     description = models.TextField(max_length=10000, verbose_name=_('Описание'))
-    price = models.FloatField(default=0, verbose_name=_('Цена'))
-    shop = models.ForeignKey(Shop, default=None, null=True, on_delete=models.CASCADE,
-                             related_name="item_shop", verbose_name=_('Магазин'))
 
     class Meta:
         verbose_name_plural = _('товары')
@@ -27,6 +24,25 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ProductInShop(models.Model):
+    product = models.ForeignKey(Product, default=None, null=True, on_delete=models.CASCADE,
+                                related_name="item_shop", verbose_name=_('Товар'))
+    shop = models.ForeignKey(Shop, default=None, null=True, on_delete=models.CASCADE,
+                             related_name="shop", verbose_name=_('Магазин'))
+    price = models.FloatField(default=0, verbose_name=_('Цена'))
+    count = models.IntegerField(default=0, verbose_name=_('Количество'))
+
+
+class BoughtProduct(models.Model):
+    product = models.ForeignKey(Product, default=None, null=True, on_delete=models.CASCADE,
+                                related_name="item_user", verbose_name=_('Товар'))
+    bought_price = models.FloatField(default=0, verbose_name=_('Цена'))
+    count = models.IntegerField(default=0, verbose_name=_('Количество'))
+
+    def __str__(self):
+        return self.product.name
 
 
 class Discount(models.Model):
