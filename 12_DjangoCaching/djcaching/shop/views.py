@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from .forms import AuthForm, UserRegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LogoutView
-from .models import Shop, Product
+from .models import Shop, Product, Discount
 
 
 class ShopsListView(TemplateView):
@@ -16,7 +16,14 @@ class ShopsListView(TemplateView):
 
 
 class UserPageView(TemplateView):
-    template_name = 'shop/page_user.html'
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if not user.is_anonymous:
+            discounts = Discount.objects.all()
+            return render(request, 'shop/page_user.html', context={'discounts': discounts})
+        else:
+            return HttpResponseRedirect('shops-list')
 
 
 class RegistartionView(TemplateView):

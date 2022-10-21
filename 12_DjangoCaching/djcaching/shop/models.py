@@ -27,3 +27,15 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Discount(models.Model):
+    name = models.CharField(max_length=1000, verbose_name=_('Название'))
+    description = models.TextField(max_length=10000, verbose_name=_('Описание'))
+
+    class Meta:
+        verbose_name_plural = _('акции')
+        verbose_name = _('акция')
+
+    def __str__(self):
+        return self.name

@@ -6,5 +6,13 @@
 </head>
 <body>
    {% include 'shop/header.html' %}
+
+   {% if discounts|length > 0 %}
+       <h1>Акции</h1>
+       {% for discount in discounts %}
+        <h2>{{discount.name}}</h2>
+        <h3>{{discount.description}}</h3>
+       {% endfor %}
+   {% endif %}
 </body>
 </html>
