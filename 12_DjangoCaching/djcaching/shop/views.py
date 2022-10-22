@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from .forms import AuthForm, UserRegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LogoutView
-from .models import Shop, Discount, ProductInShop
+from .models import Shop, Discount, ProductInShop, Purchase, UserProfile
 
 
 class ShopsListView(TemplateView):
@@ -21,7 +21,17 @@ class UserPageView(TemplateView):
         user = request.user
         if not user.is_anonymous:
             discounts = Discount.objects.all()
-            return render(request, 'shop/page_user.html', context={'discounts': discounts})
+            purchases = Purchase.objects.filter(user=user)
+            personal_offer = ProductInShop.objects.order_by('?').first()
+            try:
+                user_profile = UserProfile.objects.get(user=user)
+            except UserProfile.DoesNotExist:
+                user_profile = UserProfile.objects.create(user=user, balance=0.0)
+
+            return render(request, 'shop/page_user.html', context={'discounts': discounts,
+                                                                   'purchases': purchases,
+                                                                   'personal_offer': personal_offer,
+                                                                   'user_profile': user_profile})
         else:
             return HttpResponseRedirect('shops-list')
 
@@ -51,8 +61,10 @@ class ShopProductsView(TemplateView):
     def get(self, request, shop_id):
         shop = Shop.objects.get(id=shop_id)
         products_list = ProductInShop.objects.filter(shop=shop)
+
         return render(request, 'shop/page_shop_products.html', context={'products': products_list,
-                                                                        'shop': shop})
+                                                                        'shop': shop,
+                                                                        })
 
 
 class ProductDetailsView(TemplateView):

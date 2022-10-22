@@ -5,6 +5,11 @@ from django.contrib.auth.hashers import make_password
 
 def fill_db(apps, schema_editor):
 
+    discounts = apps.get_model('shop', 'Discount')
+    for i in range(1, 10):
+        discounts.objects.create(name='Акция № {}'.format(i),
+                                 description='Описание для акции № {}'.format(i))
+
     shops = apps.get_model('shop', 'Shop')
     shops.objects.all().delete()
     shops_cnt = 20

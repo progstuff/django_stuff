@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -8,12 +8,38 @@
    {% include 'shop/header.html' %}
     <a href="/shops-list">На главную</a>
 
-   {% if discounts|length > 0 %}
+    <p>Баланс: {{user_profile.balance}}</p>
+    <p>###############################################</p>
+    <h1>Персональное предложение</h1>
+    <h2>Название магазина : {{personal_offer.shop.name}}</h2>
+    <h2>Название товара : {{personal_offer.product.name}}</h2>
+    <h3>Описание: {{personal_offer.product.description}}</h3>
+    <h3>Цена: {{personal_offer.price}}</h3>
+    <p>###############################################</p>
+
+    {% if discounts|length > 0 %}
        <h1>Акции</h1>
        {% for discount in discounts %}
         <h2>{{discount.name}}</h2>
         <h3>{{discount.description}}</h3>
+        <p>--------------------------</p>
        {% endfor %}
    {% endif %}
+
+    <h1>Покупки</h1>
+    {% if purchases|length > 0 %}
+        <p>/////////////////////////////</p>
+       {% for purchase in purchases %}
+        <h2>Название магазина : {{purchase.shop.name}}</h2>
+        <h2>Название товара : {{purchase.product.name}}</h2>
+        <h3>Описание: {{purchase.product.description}}</h3>
+        <h3>Цена: {{purchase.bought_price}}</h3>
+        <h3>Куплено штук: {{purchase.count}}</h3>
+        <p>--------------------------</p>
+       {% endfor %}
+   {% else %}
+        <p>Покупок нет</p>
+   {% endif %}
+
 </body>
 </html>

@@ -1,6 +1,6 @@
 {% load i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -12,6 +12,7 @@
     {% for product_in_shop in products %}
         <h2> <a href="/product-details/{{product_in_shop.id}}">{{product_in_shop.product.name}}</a></h2>
         <h2>{{product_in_shop.product.description}}</h2>
+        <p>-----------------------------------------</p>
     {% endfor %}
 </body>
 </html>
