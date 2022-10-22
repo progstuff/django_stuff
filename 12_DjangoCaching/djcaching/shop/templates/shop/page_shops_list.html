@@ -9,11 +9,14 @@
 
     {% include 'shop/header.html' %}
 
+    {% load cache %}
+    {% cache 500 purchase_list %}
     {% for shop in shops %}
-    <h2> <a href="shop-products/{{shop.id}}">{{shop.name}}</a></h2>
+        <h2> <a href="shop-products/{{shop.id}}">{{shop.name}}</a></h2>
         <h3>{{shop.addres}}</h3>
         <p>-----------------------------------------</p>
     {% endfor %}
+    {% endcache %}
 
 </body>
 </html>

@@ -5,6 +5,7 @@ from .forms import AuthForm, UserRegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LogoutView
 from .models import Shop, Discount, ProductInShop, Purchase, UserProfile
+from django.core.cache import cache
 
 
 class ShopsListView(TemplateView):
@@ -20,9 +21,21 @@ class UserPageView(TemplateView):
     def get(self, request, *args, **kwargs):
         user = request.user
         if not user.is_anonymous:
+            discounts_cache_key = 'discounts:{}'.format(user.username)
+            personal_offer_cache_key = 'personal_offer:{}'.format(user.username)
+            purchases_cache_key = 'purchases:{}'.format(user.username)
+
             discounts = Discount.objects.all()
             purchases = Purchase.objects.filter(user=user)
             personal_offer = ProductInShop.objects.order_by('?').first()
+
+            user_cache_data = {
+                discounts_cache_key: discounts,
+                purchases_cache_key: purchases,
+                personal_offer_cache_key: personal_offer
+            }
+            cache.set_many(user_cache_data, 60)
+
             try:
                 user_profile = UserProfile.objects.get(user=user)
             except UserProfile.DoesNotExist:

@@ -12,7 +12,7 @@ def fill_db(apps, schema_editor):
 
     shops = apps.get_model('shop', 'Shop')
     shops.objects.all().delete()
-    shops_cnt = 20
+    shops_cnt = 300
     for i in range(1, shops_cnt+1):
         shops.objects.create(name='Магазин № {}'.format(i),
                              addres=('Адрес магазина № {} '.format(i)))
@@ -41,15 +41,17 @@ def fill_db(apps, schema_editor):
         users.objects.create(username='User_{}'.format(i), password=make_password('User_{}'.format(i)))
 
     purchases = apps.get_model('shop', 'Purchase')
-    for i in range(1, 10):
-        user = users.objects.all()[randint(0, users_cnt - 1)]
-        shop = shops.objects.all()[randint(0, shops_cnt - 1)]
-        product_in_shop = products_in_shop.objects.filter(shop=shop).order_by('-id')[0]
-        purchases.objects.create(user=user,
-                                 shop=shop,
-                                 product=product_in_shop.product,
-                                 bought_price=product_in_shop.price,
-                                 count=randint(2, 5))
+    for i in range(0, users_cnt):
+        user = users.objects.all()[i]
+
+        for j in range(1, randint(3, 15)):
+            shop = shops.objects.all()[randint(0, shops_cnt - 1)]
+            product_in_shop = products_in_shop.objects.filter(shop=shop).order_by('?')[0]
+            purchases.objects.create(user=user,
+                                     shop=shop,
+                                     product=product_in_shop.product,
+                                     bought_price=product_in_shop.price,
+                                     count=randint(2, 5))
 
 
 class Migration(migrations.Migration):
