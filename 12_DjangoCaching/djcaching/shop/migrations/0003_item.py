@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0002_add_shops_records'),
+        ('shop', '0001_initial'),
     ]
 
     operations = [

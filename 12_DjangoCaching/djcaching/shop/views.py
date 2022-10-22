@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from .forms import AuthForm, UserRegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LogoutView
-from .models import Shop, Product, Discount
+from .models import Shop, Discount, ProductInShop
 
 
 class ShopsListView(TemplateView):
@@ -50,13 +50,17 @@ class ShopProductsView(TemplateView):
 
     def get(self, request, shop_id):
         shop = Shop.objects.get(id=shop_id)
-        products_list = Product.objects.filter(shop=shop)
+        products_list = ProductInShop.objects.filter(shop=shop)
         return render(request, 'shop/page_shop_products.html', context={'products': products_list,
                                                                         'shop': shop})
 
 
 class ProductDetailsView(TemplateView):
     template_name = 'shop/page_product_details.html'
+
+    def get(self, request, product_in_shop_id):
+        product_in_shop = ProductInShop.objects.get(id=product_in_shop_id)
+        return render(request, 'shop/page_product_details.html', context={'product_in_shop': product_in_shop})
 
 
 class LogOutView(LogoutView):

@@ -10,12 +10,14 @@ class AuthForm(forms.Form):
 
 
 class UserRegisterForm(UserCreationForm):
+
     password1 = forms.CharField(
         label=_("Пароль"),
         strip=False,
         widget=forms.PasswordInput,
         help_text=_("Минимум 8 знаков"),
     )
+
     password2 = forms.CharField(
         label=_("Подтверждение пароля"),
         widget=forms.PasswordInput,

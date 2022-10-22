@@ -8,5 +8,5 @@ urlpatterns = [
     path('user-page', views.UserPageView.as_view(), name='user-page'),
     path('registration', views.RegistartionView.as_view(), name='registration'),
     path('shop-products/<int:shop_id>', views.ShopProductsView.as_view(), name='shop-products'),
-    path('product-details', views.ProductDetailsView.as_view(), name='product-details'),
+    path('product-details/<int:product_in_shop_id>', views.ProductDetailsView.as_view(), name='product-details'),
 ]

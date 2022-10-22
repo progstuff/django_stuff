@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 
 class Shop(models.Model):
@@ -35,9 +36,13 @@ class ProductInShop(models.Model):
     count = models.IntegerField(default=0, verbose_name=_('Количество'))
 
 
-class BoughtProduct(models.Model):
+class Purchase(models.Model):
+    user = models.ForeignKey(User, default=None, null=True, on_delete=models.CASCADE,
+                             related_name="user", verbose_name=_('Пользователь'))
     product = models.ForeignKey(Product, default=None, null=True, on_delete=models.CASCADE,
                                 related_name="item_user", verbose_name=_('Товар'))
+    shop = models.ForeignKey(Shop, default=None, null=True, on_delete=models.CASCADE,
+                             related_name="shop_user", verbose_name=_('Магазин'))
     bought_price = models.FloatField(default=0, verbose_name=_('Цена'))
     count = models.IntegerField(default=0, verbose_name=_('Количество'))
 

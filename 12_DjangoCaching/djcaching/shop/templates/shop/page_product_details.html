@@ -6,5 +6,12 @@
 </head>
 <body>
     {% include 'shop/header.html' %}
+    <a href="/shop-products/{{product_in_shop.shop.id}}">К списку товаров</a>
+
+    <h2>Страница товара</h2>
+    <h3>Название: {{product_in_shop.product.name}}</h3>
+    <h3>Описание: {{product_in_shop.product.description}}</h3>
+    <h3>Цена: {{product_in_shop.price}}</h3>
+    <h3>Количество: {{product_in_shop.count}}</h3>
 </body>
 </html>
