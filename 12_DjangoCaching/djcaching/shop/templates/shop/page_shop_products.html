@@ -3,11 +3,11 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{% trans "Список товаров" %}</title>
 </head>
 <body>
     {% include 'shop/header.html' %}
-    <a href="/shops-list">К списку магазинов</a>
+    <a href="/shops-list">{% trans "К списку магазинов" %}</a>
     <h1>{{shop.name}}</h1>
     {% for product_in_shop in products %}
         <h2> <a href="/product-details/{{product_in_shop.id}}">{{product_in_shop.product.name}}</a></h2>

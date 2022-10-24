@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import View
 from django.http import HttpResponseRedirect
 from .forms import AuthForm, UserRegisterForm
 from django.contrib.auth import authenticate, login, logout
@@ -8,15 +8,14 @@ from .models import Shop, Discount, ProductInShop, Purchase, UserProfile
 from django.core.cache import cache
 
 
-class ShopsListView(TemplateView):
-    template_name = 'shop/page_shops_list.html'
+class ShopsListView(View):
 
     def get(self, request, *args, **kwargs):
         shops_list = Shop.objects.all()
         return render(request, 'shop/page_shops_list.html', context={'shops': shops_list})
 
 
-class UserPageView(TemplateView):
+class UserPageView(View):
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -49,8 +48,7 @@ class UserPageView(TemplateView):
             return HttpResponseRedirect('shops-list')
 
 
-class RegistartionView(TemplateView):
-    template_name = 'shop/page_registration.html'
+class RegistartionView(View):
 
     def get(self, request, *args, **kwargs):
         register_form = UserRegisterForm()
@@ -68,8 +66,7 @@ class RegistartionView(TemplateView):
             return render(request, 'shop/page_registration.html', context={'form': register_form, 'errors': errors.__str__()})
 
 
-class ShopProductsView(TemplateView):
-    template_name = 'shop/page_shop_products.html'
+class ShopProductsView(View):
 
     def get(self, request, shop_id):
         shop = Shop.objects.get(id=shop_id)
@@ -80,8 +77,7 @@ class ShopProductsView(TemplateView):
                                                                         })
 
 
-class ProductDetailsView(TemplateView):
-    template_name = 'shop/page_product_details.html'
+class ProductDetailsView(View):
 
     def get(self, request, product_in_shop_id):
         product_in_shop = ProductInShop.objects.get(id=product_in_shop_id)
@@ -99,8 +95,7 @@ class LogOutView(LogoutView):
             return HttpResponseRedirect('shops-list')
 
 
-class LoginView(TemplateView):
-    template_name = "shop/page_login.html"
+class LoginView(View):
 
     def post(self, request, *args, **kwargs):
         auth_form = AuthForm(request.POST)
