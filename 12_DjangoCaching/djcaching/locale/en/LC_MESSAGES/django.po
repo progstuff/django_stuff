@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-24 23:13+0300\n"
+"POT-Creation-Date: 2022-10-24 23:23+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,7 +41,7 @@ msgstr "Enter password again"
 msgid "Буквы, цифры и @/./+/-/_"
 msgstr "Letters, numbers and @/./+/-/_"
 
-#: .\shop\models.py:8 .\shop\models.py:20 .\shop\models.py:62
+#: .\shop\models.py:8 .\shop\models.py:20 .\shop\models.py:74
 #: .\shop\templates\shop\page_product_details.html:13
 msgid "Название"
 msgstr "Name"
@@ -58,7 +58,7 @@ msgstr "the shops"
 msgid "магазин"
 msgstr "shop"
 
-#: .\shop\models.py:21 .\shop\models.py:63
+#: .\shop\models.py:21 .\shop\models.py:75
 #: .\shop\templates\shop\page_product_details.html:14
 #: .\shop\templates\shop\page_user.html:17
 #: .\shop\templates\shop\page_user.html:37
@@ -73,38 +73,62 @@ msgstr "products"
 msgid "товар"
 msgstr "product"
 
-#: .\shop\models.py:33 .\shop\models.py:44
+#: .\shop\models.py:33 .\shop\models.py:48
 msgid "Товар"
 msgstr "Product"
 
-#: .\shop\models.py:35 .\shop\models.py:46
+#: .\shop\models.py:35 .\shop\models.py:50
 msgid "Магазин"
 msgstr "Shop"
 
-#: .\shop\models.py:36 .\shop\models.py:47
+#: .\shop\models.py:36 .\shop\models.py:51
 #: .\shop\templates\shop\page_product_details.html:15
 #: .\shop\templates\shop\page_user.html:38
 msgid "Цена"
 msgstr "Price"
 
-#: .\shop\models.py:37 .\shop\models.py:48
+#: .\shop\models.py:37 .\shop\models.py:52
 #: .\shop\templates\shop\page_product_details.html:16
 msgid "Количество"
 msgstr "Quantity"
 
-#: .\shop\models.py:42 .\shop\models.py:57
+#: .\shop\models.py:40
+msgid "товары в магазине"
+msgstr "goods in the store"
+
+#: .\shop\models.py:41
+msgid "товар в магазине"
+msgstr "product in the store"
+
+#: .\shop\models.py:46 .\shop\models.py:65
 msgid "Пользователь"
 msgstr "User"
 
-#: .\shop\models.py:58 .\shop\templates\shop\page_user.html:12
+#: .\shop\models.py:56 .\shop\templates\shop\page_user.html:31 .\shop\models.py:57
+msgid "Покупки"
+msgstr "Purchases"
+
+#: .\shop\models.py:57
+msgid "Покупка"
+msgstr "Purchase"
+
+#: .\shop\models.py:66 .\shop\templates\shop\page_user.html:12
 msgid "Баланс"
 msgstr "Balance"
 
-#: .\shop\models.py:66
+#: .\shop\models.py:69
+msgid "Учётные записи"
+msgstr "Profiles"
+
+#: .\shop\models.py:70
+msgid "Учётная запись"
+msgstr "Profile"
+
+#: .\shop\models.py:78
 msgid "акции"
 msgstr "promotions"
 
-#: .\shop\models.py:67
+#: .\shop\models.py:79
 msgid "акция"
 msgstr "promotion"
 
@@ -207,10 +231,6 @@ msgstr "Price:"
 #: .\shop\templates\shop\page_user.html:22
 msgid "Акции"
 msgstr "Promotions"
-
-#: .\shop\templates\shop\page_user.html:31
-msgid "Покупки"
-msgstr "Purchases"
 
 #: .\shop\templates\shop\page_user.html:39
 msgid "Куплено штук"

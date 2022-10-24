@@ -36,6 +36,10 @@ class ProductInShop(models.Model):
     price = models.FloatField(default=0, verbose_name=_('Цена'))
     count = models.IntegerField(default=0, verbose_name=_('Количество'))
 
+    class Meta:
+        verbose_name_plural = _('товары в магазине')
+        verbose_name = _('товар в магазине')
+
 
 class Purchase(models.Model):
     user = models.ForeignKey(User, default=None, null=True, on_delete=models.CASCADE,
@@ -48,6 +52,10 @@ class Purchase(models.Model):
     count = models.IntegerField(default=0, verbose_name=_('Количество'))
     create_date = models.DateTimeField(default=datetime.now, verbose_name='Дата покупки')
 
+    class Meta:
+        verbose_name_plural = _('Покупки')
+        verbose_name = _('Покупка')
+
     def __str__(self):
         return self.product.name
 
@@ -56,6 +64,10 @@ class UserProfile(models.Model):
     user = models.ForeignKey(User, default=None, null=True, on_delete=models.CASCADE,
                              related_name="user_for_profile", verbose_name=_('Пользователь'))
     balance = models.FloatField(default=0, verbose_name=_('Баланс'))
+
+    class Meta:
+        verbose_name_plural = _('Учётные записи')
+        verbose_name = _('Учётная запись')
 
 
 class Discount(models.Model):
