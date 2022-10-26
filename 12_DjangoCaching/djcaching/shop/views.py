@@ -24,16 +24,22 @@ class UserPageView(View):
             personal_offer_cache_key = 'personal_offer:{}'.format(user.username)
             purchases_cache_key = 'purchases:{}'.format(user.username)
 
-            discounts = Discount.objects.all()
-            purchases = Purchase.objects.filter(user=user)
-            personal_offer = ProductInShop.objects.order_by('?').first()
+            discounts = cache.get(discounts_cache_key)
+            purchases = cache.get(personal_offer_cache_key)
+            personal_offer = cache.get(purchases_cache_key)
 
-            user_cache_data = {
-                discounts_cache_key: discounts,
-                purchases_cache_key: purchases,
-                personal_offer_cache_key: personal_offer
-            }
-            cache.set_many(user_cache_data, 60)
+            if (discounts is None) or (purchases is None) or (personal_offer is None):
+                print('кэш пустой')
+                discounts = Discount.objects.all()
+                purchases = Purchase.objects.filter(user=user)
+                personal_offer = ProductInShop.objects.order_by('?').first()
+
+                user_cache_data = {
+                    discounts_cache_key: discounts,
+                    purchases_cache_key: purchases,
+                    personal_offer_cache_key: personal_offer
+                }
+                cache.set_many(user_cache_data, 60)
 
             try:
                 user_profile = UserProfile.objects.get(user=user)
