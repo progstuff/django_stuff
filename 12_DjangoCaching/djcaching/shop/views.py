@@ -25,8 +25,8 @@ class UserPageView(View):
             purchases_cache_key = 'purchases:{}'.format(user.username)
 
             discounts = cache.get(discounts_cache_key)
-            purchases = cache.get(personal_offer_cache_key)
-            personal_offer = cache.get(purchases_cache_key)
+            purchases = cache.get(purchases_cache_key)
+            personal_offer = cache.get(personal_offer_cache_key)
 
             if (discounts is None) or (purchases is None) or (personal_offer is None):
                 print('кэш пустой')
