@@ -26,3 +26,17 @@ class Book(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class AuthorRights:
+    book = models.ForeignKey(Book, default=None, null=True, on_delete=models.CASCADE,
+                             related_name="book", verbose_name=_('Книга'))
+    author = models.ForeignKey(Author, default=None, null=True, on_delete=models.CASCADE,
+                               related_name="author", verbose_name=_('Автор'))
+
+    class Meta:
+        verbose_name_plural = _('Авторские права')
+        verbose_name = _('Авторское право')
+
+    def __str__(self):
+        return self.book.__str__() + " " + self.author.__str__()
