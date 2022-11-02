@@ -9,12 +9,12 @@ def fill_db(apps, schema_editor):
     books = apps.get_model('library_api', 'Book')
     authors_cnt = 10
     for i in range(authors_cnt):
-        authors.objects.create(name="Имя {}".format(i+1), last_name="Фамилия {}".format(i+1))
+        authors.objects.create(name="Name {}".format(i+1), last_name="Lastname {}".format(i+1))
 
     books_cnt = 20
     for i in range(books_cnt):
-        books.objects.create(name="Название {}".format(i+1),
-                             isbn="Код {}".format(i+1),
+        books.objects.create(name="Title {}".format(i+1),
+                             isbn="Code {}".format(i+1),
                              year=randint(1990, 2020),
                              pages_cnt=randint(50, 500))
 
