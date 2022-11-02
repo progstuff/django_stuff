@@ -2,7 +2,8 @@ from rest_framework import viewsets
 from rest_framework import generics
 from django.contrib.auth.models import User
 from .serialisers import UserSerializer, BookSerializer, AuthorSerializer
-from .models import Book, Author
+from .models import Book, Author, AuthorRules
+from django.db.models import F
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -19,8 +20,8 @@ class BookViewSet(generics.ListCreateAPIView):
         pages_min = self.request.query_params.get('pages_min', None)
         pages_max = self.request.query_params.get('pages_max', None)
         pages_equal = self.request.query_params.get('pages_equal', None)
-        author_name = self.query_params.get('author', None)
-        title = self.query_params.get('title', None)
+        author_name = self.request.query_params.get('author', None)
+        book_title = self.request.query_params.get('title', None)
 
         if pages_min is not None:
             try:
@@ -40,7 +41,10 @@ class BookViewSet(generics.ListCreateAPIView):
                 queryset = queryset.filter(pages_cnt=val)
             except ValueError:
                 print(pages_min, 'не удалось преобразовать в число')
-        if author_name is not None:
+        if author_name is not None and book_title is not None:
+            author_rules = AuthorRules.objects.select_related('book').filter(author__name=author_name, book__name=book_title)\
+                .annotate(user_email=F('book'))
+            return author_rules
             
 
         return queryset
