@@ -19,6 +19,9 @@ class BookViewSet(generics.ListCreateAPIView):
         pages_min = self.request.query_params.get('pages_min', None)
         pages_max = self.request.query_params.get('pages_max', None)
         pages_equal = self.request.query_params.get('pages_equal', None)
+        author_name = self.query_params.get('author', None)
+        title = self.query_params.get('title', None)
+
         if pages_min is not None:
             try:
                 val = int(pages_min)
@@ -37,6 +40,9 @@ class BookViewSet(generics.ListCreateAPIView):
                 queryset = queryset.filter(pages_cnt=val)
             except ValueError:
                 print(pages_min, 'не удалось преобразовать в число')
+        if author_name is not None:
+            
+
         return queryset
 
 
