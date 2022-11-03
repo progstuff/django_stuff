@@ -10,5 +10,5 @@ from django.urls import path
 #urlpatterns = router.urls
 urlpatterns = [
     path('books/', BookViewSet.as_view(), name='authors'),
-    path('authors/', AuthorViewSet.as_view(), name='authors')
+    path('authors/', AuthorViewSet.as_view(), name='authors'),
 ]

@@ -19,21 +19,12 @@ class Book(models.Model):
     isbn = models.CharField(max_length=1000, verbose_name=_('ISBN'))
     year = models.IntegerField(verbose_name=_('Год выпуска'))
     pages_cnt = models.IntegerField(verbose_name=_('К-во страниц'))
+    author = models.ForeignKey(Author, default=None, null=True, on_delete=models.CASCADE,
+                               related_name="books", verbose_name=_('Автор'))
 
     class Meta:
         verbose_name_plural = _('Книги')
         verbose_name = _('Книга')
 
     def __str__(self):
-        return self.name
-
-
-class AuthorRules(models.Model):
-    author = models.ForeignKey(Author, default=None, null=True, on_delete=models.CASCADE,
-                               related_name="author", verbose_name=_('Автор'))
-    book = models.ForeignKey(Book, default=None, null=True, on_delete=models.CASCADE,
-                             related_name="book", verbose_name=_('Книга'))
-
-    class Meta:
-        verbose_name_plural = _('Авторские права')
-        verbose_name = _('Авторское право')
+        return self.name + " " + self.author.name

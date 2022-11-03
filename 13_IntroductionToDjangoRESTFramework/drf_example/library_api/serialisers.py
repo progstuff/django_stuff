@@ -11,13 +11,17 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 # Serializers define the API representation.
-class BookSerializer(serializers.HyperlinkedModelSerializer):
+class BookSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Book
         fields = ['id', 'name', 'isbn', 'year', 'pages_cnt']
 
 
-class AuthorSerializer(serializers.HyperlinkedModelSerializer):
+class AuthorSerializer(serializers.ModelSerializer):
+    books = BookSerializer(many=True, read_only=True)
+
     class Meta:
         model = Author
-        fields = ['id', 'name', 'last_name']
+        fields = ['id', 'name', 'last_name', 'books']
+

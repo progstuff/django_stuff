@@ -2,8 +2,7 @@ from rest_framework import viewsets
 from rest_framework import generics
 from django.contrib.auth.models import User
 from .serialisers import UserSerializer, BookSerializer, AuthorSerializer
-from .models import Book, Author, AuthorRules
-from django.db.models import F
+from .models import Book, Author
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -42,10 +41,7 @@ class BookViewSet(generics.ListCreateAPIView):
             except ValueError:
                 print(pages_min, 'не удалось преобразовать в число')
         if author_name is not None and book_title is not None:
-            author_rules = AuthorRules.objects.select_related('book').filter(author__name=author_name, book__name=book_title)\
-                .annotate(user_email=F('book'))
-            return author_rules
-            
+            queryset = queryset.filter(author__name=author_name, name=book_title)
 
         return queryset
 
