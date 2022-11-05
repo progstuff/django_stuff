@@ -11,6 +11,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class BookViewSet(generics.ListCreateAPIView):
+    """ Представление для получения списка книг"""
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
@@ -47,6 +48,7 @@ class BookViewSet(generics.ListCreateAPIView):
 
 
 class AuthorViewSet(generics.ListCreateAPIView):
+    """ Представление для получения списка авторов"""
     model = Author
     serializer_class = AuthorSerializer
 
