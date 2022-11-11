@@ -3,7 +3,6 @@ from django.views.generic import View
 from django.http import HttpResponseRedirect
 from .forms import AuthForm, UserRegisterForm
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import LogoutView
 # Create your views here.
 
 
@@ -44,7 +43,7 @@ class ShoppingCartView(View):
 
 
 class LogOutView(View):
-    
+
     def get(self, request, *args, **kwargs):
         user = request.user
         if not user.is_anonymous:
