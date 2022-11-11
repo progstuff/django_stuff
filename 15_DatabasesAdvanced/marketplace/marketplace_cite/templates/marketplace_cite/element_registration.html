@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if request.user.is_authenticated %}
+    <p>{% trans "Привет" %}, <a href="/personal-cabinet">{{request.user}}</a> <a href="/logout">{% trans "Выйти" %}</a></p>
+{% else %}
+    <p><a href="/registration">{% trans "Регистрация" %}</a> <a href="/login">{% trans "Войти" %}</a></p>
+{% endif %}
+<p> </p>
+<p> </p>
