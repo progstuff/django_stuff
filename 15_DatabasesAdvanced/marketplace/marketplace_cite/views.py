@@ -1,21 +1,51 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponseRedirect
-from .forms import AuthForm, UserRegisterForm
+from .forms import AuthForm, UserRegisterForm, AddBalanceForm
 from django.contrib.auth import authenticate, login, logout
+from .models import UserProfile
 # Create your views here.
+
+
+def get_user_profile(user):
+    try:
+        user_profile = UserProfile.objects.get(user=user)
+        return user_profile
+    except UserProfile.DoesNotExist:
+        return None
 
 
 class BalancePage(View):
 
     def get(self, request):
-        return render(request, 'marketplace_cite/add_balance_page.html', context={})
+        user = request.user
+        user_profile = get_user_profile(user)
+        if not user.is_anonymous:
+            form = None
+            if user_profile is not None:
+                form = AddBalanceForm()
+            return render(request,
+                          'marketplace_cite/add_balance_page.html',
+                          context={'form': form,
+                                   'profile': user_profile,
+                                   'is_exist': user_profile is not None})
+        else:
+            return HttpResponseRedirect('products-list')
 
 
 class PersonalCabinetView(View):
 
     def get(self, request):
-        return render(request, 'marketplace_cite/personal_cabinet_page.html', context={})
+        user = request.user
+
+        if not user.is_anonymous:
+            user_profile = get_user_profile(user)
+            return render(request,
+                          'marketplace_cite/personal_cabinet_page.html',
+                          context={'profile': user_profile,
+                                   'is_exist': user_profile is not None})
+        else:
+            return HttpResponseRedirect('products-list')
 
 
 class PopularProductsView(View):

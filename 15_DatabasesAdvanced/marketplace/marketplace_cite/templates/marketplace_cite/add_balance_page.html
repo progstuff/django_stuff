@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,5 +7,16 @@
 </head>
 <body>
 {% include 'marketplace_cite/header.html' %}
+
+{% if is_exist %}
+    <h1>{% trans "Пополнение баланса"%}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">{% trans "Поплнить" %}</button>
+    </form>
+{% else %}
+    <h2>{% trans "Для пользователя" %}: {{request.user}} {% trans "кабинет не создан" %}</h2>
+{% endif %}
 </body>
 </html>

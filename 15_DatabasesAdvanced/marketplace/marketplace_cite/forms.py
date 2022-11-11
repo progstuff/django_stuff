@@ -9,6 +9,11 @@ class AuthForm(forms.Form):
     password = forms.CharField(label=_('Пароль'), widget=forms.PasswordInput)
 
 
+class AddBalanceForm(forms.Form):
+    balance = forms.FloatField(label=_('Сумма пополнения'),
+                                help_text=_("руб."))
+
+
 class UserRegisterForm(UserCreationForm):
 
     password1 = forms.CharField(

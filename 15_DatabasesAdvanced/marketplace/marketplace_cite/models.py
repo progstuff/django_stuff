@@ -22,7 +22,7 @@ class UserProfile(models.Model):
         verbose_name = _('Профиль пользователя')
 
     def __str__(self):
-        return self.user.name + " " + self.name
+        return self.user.username + " " + self.name
 
 
 class Shop(models.Model):
@@ -30,7 +30,7 @@ class Shop(models.Model):
 
     class Meta:
         verbose_name_plural = _('Магазины')
-        verbose_name = _('Магазин')
+        verbose_name = _('магазин')
 
     def __str__(self):
         return self.name
@@ -42,7 +42,7 @@ class Product(models.Model):
 
     class Meta:
         verbose_name_plural = _('Товары')
-        verbose_name = _('Товар')
+        verbose_name = _('товар')
 
     def __str__(self):
         return self.name
@@ -64,7 +64,7 @@ class Purchase(models.Model):
 
     class Meta:
         verbose_name_plural = _('Покупки')
-        verbose_name = _('Покупка')
+        verbose_name = _('покупку')
 
     def __str__(self):
         return self.product.name + " " + self.shop.name
@@ -78,3 +78,10 @@ class Storage(models.Model):
     count = models.IntegerField(default=0, verbose_name=_('Количество'))
 
     price = models.FloatField(default=0, verbose_name=_('Цена'))
+
+    class Meta:
+        verbose_name_plural = _('Склады')
+        verbose_name = _('склад')
+
+    def __str__(self):
+        return  self.shop.name + self.product.name

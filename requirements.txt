@@ -1,3 +1,0 @@
-Django==4.1.2
-djangorestframework==3.14.0
-docutils==0.19

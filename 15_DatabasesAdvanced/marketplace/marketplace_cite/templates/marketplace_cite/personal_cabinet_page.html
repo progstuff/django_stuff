@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,22 @@
     <title>Cabinet</title>
 </head>
 <body>
-{% include 'marketplace_cite/header.html' %}
+<a href="/products-list">{% trans "На главную" %}</a>
+{% if is_exist %}
+    <h2>{% trans "Имя"%}: {{profile.name}}</h2>
+    <table>
+      <tr>
+        <td><h2>{% trans "Баланс"%}: {{profile.balance}} {% trans "руб." %}</h2></td>
+        <td>
+            <form> {% csrf_token %}
+                <input type="button" onclick="window.location.href = '/add-balance';" value="Пополнить баланс"/>
+            </form>
+        </td>
+      </tr>
+    </table>
+    <h2>{% trans "Текущий статус"%}: {{profile.get_status_display}}</h2>
+{% else %}
+    <h2>{% trans "Для пользователя" %}: {{request.user}} {% trans "кабинет не создан" %}</h2>
+{% endif %}
 </body>
 </html>
