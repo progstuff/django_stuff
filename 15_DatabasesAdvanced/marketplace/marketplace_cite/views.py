@@ -3,11 +3,13 @@ from django.views.generic import View
 from django.http import HttpResponseRedirect
 from .forms import AuthForm, UserRegisterForm, AddBalanceForm
 from django.contrib.auth import authenticate, login, logout
-from .models import UserProfile
+from django.contrib.auth.models import User
+from .models import UserProfile, Storage
+from typing import Union, List, Dict
 # Create your views here.
 
 
-def get_user_profile(user):
+def get_user_profile(user: User) -> Union[UserProfile, None]:
     try:
         user_profile = UserProfile.objects.get(user=user)
         return user_profile
@@ -75,8 +77,26 @@ class PopularProductsView(View):
 
 class ProductsListView(View):
 
+    def restructure_data(self, storages: List[Storage]) -> Dict[str, List[Storage]]:
+        result = {}
+
+        while len(storages) > 0:
+            storage = storages.pop(0)
+            current_product_name = storage.product.name
+            if current_product_name not in result:
+                result[current_product_name] = []
+            result[current_product_name].append(storage)
+        return result
+
     def get(self, request):
-        return render(request, 'marketplace_cite/products_list_page.html', context={})
+        storages = list(Storage.objects.select_related('shop').select_related('product').all())
+        result = self.restructure_data(storages)
+        user = request.user
+        user_profile = None
+        if not user.is_anonymous:
+            user_profile = get_user_profile(user)
+        return render(request, 'marketplace_cite/products_list_page.html', context={'data': result,
+                                                                                    'show_button': user_profile is not None})
 
 
 class PurchaseView(View):

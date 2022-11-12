@@ -14,8 +14,8 @@ class UserProfile(models.Model):
     name = models.CharField(max_length=1000, verbose_name=_('Имя'))
     balance = models.FloatField(verbose_name=_('Баланс'))
     status = models.CharField(max_length=1000, choices=CHOICES, verbose_name=_('Статус'))
-    user = models.ForeignKey(User, default=None, null=False, on_delete=models.CASCADE,
-                             related_name="users", verbose_name=_('Пользователь'))
+    user = models.OneToOneField(User, default=None, null=False, on_delete=models.CASCADE,
+                                related_name="users", verbose_name=_('Пользователь'))
 
     class Meta:
         verbose_name_plural = _('Профили пользователей')
@@ -84,4 +84,11 @@ class Storage(models.Model):
         verbose_name = _('склад')
 
     def __str__(self):
-        return  self.shop.name + self.product.name
+        return self.shop.name + self.product.name
+
+
+class Basket(models.Model):
+    user = models.OneToOneField(User, default=None, null=False, on_delete=models.CASCADE,
+                                related_name="users_bascket", verbose_name=_('Пользователь'))
+    storage = models.ForeignKey(Storage, default=None, null=False, on_delete=models.CASCADE,
+                                related_name="users_purchases", verbose_name=_('Товар'))
