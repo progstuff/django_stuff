@@ -11,7 +11,8 @@ class AuthForm(forms.Form):
 
 class AddBalanceForm(forms.Form):
     balance = forms.FloatField(label=_('Сумма пополнения'),
-                                help_text=_("руб."))
+                               help_text=_("руб."),
+                               min_value=0.01)
 
 
 class UserRegisterForm(UserCreationForm):

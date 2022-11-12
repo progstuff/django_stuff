@@ -19,14 +19,33 @@ class BalancePage(View):
 
     def get(self, request):
         user = request.user
-        user_profile = get_user_profile(user)
         if not user.is_anonymous:
+            user_profile = get_user_profile(user)
             form = None
             if user_profile is not None:
                 form = AddBalanceForm()
             return render(request,
                           'marketplace_cite/add_balance_page.html',
                           context={'form': form,
+                                   'profile': user_profile,
+                                   'is_exist': user_profile is not None})
+        else:
+            return HttpResponseRedirect('products-list')
+
+    def post(self, request):
+        user = request.user
+        if not user.is_anonymous:
+            user_profile = get_user_profile(user)
+            balance_form = AddBalanceForm(request.POST)
+            if balance_form.is_valid():
+                balance = balance_form.cleaned_data['balance']
+                if user_profile is not None:
+                    user_profile.balance += balance
+                    user_profile.save()
+
+            return render(request,
+                          'marketplace_cite/add_balance_page.html',
+                          context={'form': balance_form,
                                    'profile': user_profile,
                                    'is_exist': user_profile is not None})
         else:

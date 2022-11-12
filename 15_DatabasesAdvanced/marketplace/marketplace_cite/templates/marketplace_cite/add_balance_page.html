@@ -10,10 +10,11 @@
 
 {% if is_exist %}
     <h1>{% trans "Пополнение баланса"%}</h1>
+    <h2>{% trans "Текущий баланс"%} {{profile.balance}} {% trans "руб." %}
     <form method="post">
         {% csrf_token %}
         {{form.as_p}}
-        <button type="submit">{% trans "Поплнить" %}</button>
+        <button type="submit">{% trans "Пополнить" %}</button>
     </form>
 {% else %}
     <h2>{% trans "Для пользователя" %}: {{request.user}} {% trans "кабинет не создан" %}</h2>
