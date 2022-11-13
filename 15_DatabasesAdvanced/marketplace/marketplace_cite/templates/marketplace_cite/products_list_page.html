@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <style>
@@ -20,7 +21,9 @@
 </head>
 <body>
 {% include 'marketplace_cite/header.html' %}
-
+{% if show_button %}
+    <h1><a href="/shopping-cart">{% trans "Корзина"%}</a> {{basket_items_cnt}} {% trans "Сумма" %} {{total_sum}}</h1>
+{% endif %}
 {% for product_name, storages in data.items %}
     <h2>{{product_name}}</h2>
     {% for storage in storages %}
@@ -28,8 +31,8 @@
             <h2>{{storage.shop.name}}</h2>
             <p>{{storage.price}}</p>
             {% if show_button %}
-            <form> {% csrf_token %}
-                <input type="button" value="Добавить в корзину"/>
+            <form method="post"> {% csrf_token %}
+                <button type="submit" name="add_button" value="{{storage.id}}">{% trans "Добавить в корзину" %}</button >
             </form>
             {% endif %}
         </div>

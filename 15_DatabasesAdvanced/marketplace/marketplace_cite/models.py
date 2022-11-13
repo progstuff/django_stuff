@@ -87,8 +87,17 @@ class Storage(models.Model):
         return self.shop.name + self.product.name
 
 
-class Basket(models.Model):
-    user = models.OneToOneField(User, default=None, null=False, on_delete=models.CASCADE,
-                                related_name="users_bascket", verbose_name=_('Пользователь'))
+class BasketItem(models.Model):
+    user = models.ForeignKey(UserProfile, default=None, null=False, on_delete=models.CASCADE,
+                             related_name="users_bascket", verbose_name=_('Пользователь'))
     storage = models.ForeignKey(Storage, default=None, null=False, on_delete=models.CASCADE,
                                 related_name="users_purchases", verbose_name=_('Товар'))
+    count = models.IntegerField(default=0, verbose_name=_('Количество'))
+    price = models.FloatField(default=0, verbose_name=_('Цена'))
+
+    class Meta:
+        verbose_name_plural = _('Корзины')
+        verbose_name = _('корзина')
+
+    def __str__(self):
+        return self.shop.name + self.product.name

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Shop, Product, Purchase, Storage
+from .models import UserProfile, Shop, Product, Purchase, Storage, BasketItem
 
 
 @admin.register(UserProfile)
@@ -25,3 +25,8 @@ class PurchaseModelAdmin(admin.ModelAdmin):
 @admin.register(Storage)
 class StorageModelAdmin(admin.ModelAdmin):
     list_display = ['id', 'shop', 'product', 'count', 'price']
+
+
+@admin.register(BasketItem)
+class BasketModelAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'storage', 'count']

@@ -1,10 +1,40 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Shopping cart</title>
 </head>
-<body>
 
+<style>
+<!-- (A) THE CSS -->
+<style>
+/* (A) LAYOUT CONTAINER AS A TABLE */
+.wrap-table { display: table; }
+
+/* (B) "CONVERT" ITEMS TO TABLE CELLS */
+.wrap-table > * { display: table-cell; }
+
+/* (C) NOT IMPORTANT - COSMETICS */
+.wrap-table > * { border: 10px solid white; }
+.wrap-table img { width: 100%; }
+</style>
+
+<body>
+{% include 'marketplace_cite/header.html' %}
+<a href="/products-list">{% trans "На главную" %}</a>
+
+{% if show_data %}
+    <h2>{% trans "Корзина" %}</h2>
+    {% for basket_item in basket_items %}
+            <div class="wrap-table">
+                <h3>{{basket_item.storage.product.name}}</h3>
+                <h3>{{basket_item.storage.price}} * {{basket_item.count}} = {{basket_item.sub_total}} {% trans "руб."%}</h3>
+            </div>
+    {% endfor %}
+    <h2>{% trans "Всего"%}: {{total_sum}}</h2>
+{% else %}
+    <h2>{% trans "Данный пользователь не может совершать покупки"%}</h2>
+{% endif %}
 </body>
 </html>
