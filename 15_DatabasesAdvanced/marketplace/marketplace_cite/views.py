@@ -4,10 +4,11 @@ from django.http import HttpResponseRedirect
 from .forms import AuthForm, UserRegisterForm, AddBalanceForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import UserProfile, Storage, BasketItem
+from .models import UserProfile, Storage, BasketItem, Purchase
 from typing import Union, List, Dict
 from django.db.models import Sum
 from django.db.models import F
+from django.db.models.query import QuerySet
 # Create your views here.
 
 
@@ -17,6 +18,15 @@ def get_user_profile(user: User) -> Union[UserProfile, None]:
         return user_profile
     except UserProfile.DoesNotExist:
         return None
+
+
+def calculate_total_sum(data: QuerySet[BasketItem]) -> float:
+    data = data.annotate(sub_total=F('price') * F('count'))
+    total_sum = data.aggregate(Sum('sub_total'))
+    total_sum = total_sum['sub_total__sum']
+    if total_sum is None:
+        total_sum = 0
+    return total_sum, data
 
 
 class BalancePage(View):
@@ -63,10 +73,17 @@ class PersonalCabinetView(View):
 
         if not user.is_anonymous:
             user_profile = get_user_profile(user)
+            data = []
+            if user_profile is not None:
+                data = list(Purchase.objects.filter(user=user_profile)
+                            .select_related('shop')
+                            .select_related('product')
+                            .annotate(sub_total=F('price') * F('count')).all())
             return render(request,
                           'marketplace_cite/personal_cabinet_page.html',
                           context={'profile': user_profile,
-                                   'is_exist': user_profile is not None})
+                                   'is_exist': user_profile is not None,
+                                   'purchases': data})
         else:
             return HttpResponseRedirect('products-list')
 
@@ -170,17 +187,52 @@ class PurchaseView(View):
             user_profile = get_user_profile(user)
             total_sum = 0
             if user_profile is not None:
+
                 data = BasketItem.objects.filter(user=user_profile).select_related('storage')
-                data = data.annotate(sub_total=F('price') * F('count'))
-                total_sum = data.aggregate(Sum('sub_total'))
-                total_sum = total_sum['sub_total__sum']
-                if total_sum is None:
-                    total_sum = 0
+                ######################## подсчёт суммы покупки
+                total_sum, data = calculate_total_sum(data)
+                ##############################################
+
             return render(request, 'marketplace_cite/purchase_page.html',
                           context={'total_sum': total_sum,
                                    'show_data': user_profile is not None,
                                    'user_profile': user_profile,
                                    'need_add_balance': total_sum > user_profile.balance})
+
+        return HttpResponseRedirect('products-list')
+
+    def post(self, request):
+        user = request.user
+        if not user.is_anonymous:
+            user_profile = get_user_profile(user)
+            if user_profile is not None:
+
+                ################ извлечение записей из корзины
+                data = BasketItem.objects.filter(user=user_profile)\
+                    .select_related('storage')\
+                    .select_related('storage__product')\
+                    .select_related('storage__shop')
+                ##############################################
+
+                ######################## подсчёт суммы покупки
+                total_sum, data = calculate_total_sum(data)
+                ##############################################
+
+                ################## создание записей о покупке
+                for item in data:
+                    Purchase.objects.create(shop=item.storage.shop,
+                                            product=item.storage.product,
+                                            price=item.price,
+                                            count=item.count,
+                                            user=user_profile)
+                ##############################################
+
+                data.delete() # удаление записей в корзине
+
+                ################## обновление баланса
+                user_profile.balance -= total_sum
+                user_profile.save()
+                #####################################
 
         return HttpResponseRedirect('products-list')
 
@@ -194,12 +246,12 @@ class ShoppingCartView(View):
             basket_items = []
             total_sum = 0
             if user_profile is not None:
+
                 data = BasketItem.objects.filter(user=user_profile).select_related('storage')
-                data = data.annotate(sub_total=F('price') * F('count'))
-                total_sum = data.aggregate(Sum('sub_total'))
-                total_sum = total_sum['sub_total__sum']
-                if total_sum is None:
-                    total_sum = 0
+
+                ######################## подсчёт суммы покупки
+                total_sum, data = calculate_total_sum(data)
+                ##############################################
 
                 basket_items = list(data.all())
             return render(request, 'marketplace_cite/shopping_cart_page.html',

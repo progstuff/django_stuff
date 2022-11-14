@@ -20,6 +20,11 @@
       </tr>
     </table>
     <h2>{% trans "Текущий статус"%}: {{profile.get_status_display}}</h2>
+
+    <h2>{% trans "Список покупок"%}</h2>
+    {% for purchase in purchases %}
+        <h3>{{purchase.product.name}} {{purchase.shop.name}} {{purchase.price}}*{{purchase.count}}={{purchase.sub_total|floatformat:2}} {% trans "руб."%}</h3>
+    {% endfor %}
 {% else %}
     <h2>{% trans "Для пользователя" %}: {{request.user}} {% trans "кабинет не создан" %}</h2>
 {% endif %}
