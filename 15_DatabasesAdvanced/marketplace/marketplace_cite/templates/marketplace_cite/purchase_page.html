@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,27 @@
     <title>Purchase</title>
 </head>
 <body>
+
+{% include 'marketplace_cite/header.html' %}
+<a href="/products-list">{% trans "На главную" %}</a>
+
+{% if show_data %}
+    <h2>{% trans "Страница оплаты" %}</h2>
+
+    <h2>{% trans "Средств на счёте"%}: {{user_profile.balance}}  {% trans "руб."%}</h2>
+    <h2>{% trans "К оплате"%}: {{total_sum}}  {% trans "руб."%}</h2>
+
+    {% if need_add_balance %}
+        <h2>{% trans "Недостаточно средств на счёте" %}</h2>
+        <a href="/shopping-cart">{% trans "К корзине" %}</a>
+    {% else %}
+        <form method="post"> {% csrf_token %}
+            <button type="submit" name="purchase_button">{% trans "Оплатить" %}</button >
+        </form>
+    {% endif %}
+{% else %}
+    <h2>{% trans "Данный пользователь не может совершать покупки"%}</h2>
+{% endif %}
 
 </body>
 </html>

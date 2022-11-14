@@ -26,13 +26,23 @@
 
 {% if show_data %}
     <h2>{% trans "Корзина" %}</h2>
-    {% for basket_item in basket_items %}
-            <div class="wrap-table">
-                <h3>{{basket_item.storage.product.name}}</h3>
-                <h3>{{basket_item.storage.price}} * {{basket_item.count}} = {{basket_item.sub_total}} {% trans "руб."%}</h3>
-            </div>
-    {% endfor %}
-    <h2>{% trans "Всего"%}: {{total_sum}}</h2>
+    {% if basket_items|length > 0 %}
+
+        {% for basket_item in basket_items %}
+                <div class="wrap-table">
+                    <h3>{{basket_item.storage.product.name}}</h3>
+                    <h3>{{basket_item.storage.price}} * {{basket_item.count}} = {{basket_item.sub_total}} {% trans "руб."%}</h3>
+                </div>
+        {% endfor %}
+
+        <h2>{% trans "Всего"%}: {{total_sum}}</h2>
+        <form> {% csrf_token %}
+            <input type="button" onclick="window.location.href = '/purchase';" value="Перейти к оплате"/>
+        </form>
+
+    {% else %}
+        <h2>{% trans "В корзине нет товаров" %}</h2>
+    {% endif %}
 {% else %}
     <h2>{% trans "Данный пользователь не может совершать покупки"%}</h2>
 {% endif %}

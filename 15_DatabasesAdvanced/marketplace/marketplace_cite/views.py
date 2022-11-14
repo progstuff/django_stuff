@@ -164,7 +164,25 @@ class ProductsListView(View):
 class PurchaseView(View):
 
     def get(self, request):
-        return render(request, 'marketplace_cite/purchase_page.html', context={})
+        user = request.user
+        if not user.is_anonymous:
+
+            user_profile = get_user_profile(user)
+            total_sum = 0
+            if user_profile is not None:
+                data = BasketItem.objects.filter(user=user_profile).select_related('storage')
+                data = data.annotate(sub_total=F('price') * F('count'))
+                total_sum = data.aggregate(Sum('sub_total'))
+                total_sum = total_sum['sub_total__sum']
+                if total_sum is None:
+                    total_sum = 0
+            return render(request, 'marketplace_cite/purchase_page.html',
+                          context={'total_sum': total_sum,
+                                   'show_data': user_profile is not None,
+                                   'user_profile': user_profile,
+                                   'need_add_balance': total_sum > user_profile.balance})
+
+        return HttpResponseRedirect('products-list')
 
 
 class ShoppingCartView(View):
