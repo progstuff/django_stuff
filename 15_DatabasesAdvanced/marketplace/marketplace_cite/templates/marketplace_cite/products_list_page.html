@@ -22,7 +22,7 @@
 <body>
 {% include 'marketplace_cite/header.html' %}
 {% if show_button %}
-    <h1><a href="/shopping-cart">{% trans "Корзина"%}</a> {{basket_items_cnt}} {% trans "Сумма" %} {{total_sum|floatformat:2}} {% trans "руб."%}</h1>
+    <h1><a href="/shopping-cart">{% trans "Корзина"%}</a> {{basket_items_cnt}} {% trans "шт."%} {% trans "Сумма" %} {{total_sum|floatformat:2}} {% trans "руб."%}</h1>
 {% endif %}
 {% for product_name, storages in data.items %}
     <h2>{{product_name}}</h2>
@@ -30,6 +30,7 @@
         <div class="wrap-table">
             <h2>{{storage.shop.name}}</h2>
             <p>{{storage.price}}</p>
+            <p>{% trans "В наличии"%}: {{storage.count}} {% trans "шт."%}</p>
             {% if show_button %}
             <form method="post"> {% csrf_token %}
                 <button type="submit" name="add_button" value="{{storage.id}}">{% trans "Добавить в корзину" %}</button >

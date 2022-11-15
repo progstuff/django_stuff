@@ -31,11 +31,16 @@
         {% for basket_item in basket_items %}
                 <div class="wrap-table">
                     <h3>{{basket_item.storage.product.name}}</h3>
-                    <h3>{{basket_item.storage.price}} * {{basket_item.count}} = {{basket_item.sub_total}} {% trans "руб."%}</h3>
+                    <h3>{{basket_item.storage.price}} * {{basket_item.count}} = {{basket_item.sub_total|floatformat:2}} {% trans "руб."%} ({% trans "в наличии:"%} {{basket_item.storage.count}} {% trans "шт."%})</h3>
                 </div>
         {% endfor %}
 
-        <h2>{% trans "Всего"%}: {{total_sum}}</h2>
+        <h2>{% trans "Всего"%}: {{total_sum|floatformat:2}} {% trans "руб."%}</h2>
+
+        <form method="post"> {% csrf_token %}
+            <button type="submit" name="clear_basket">{% trans "Очистить корзину" %}</button >
+        </form>
+
         <form> {% csrf_token %}
             <input type="button" onclick="window.location.href = '/purchase';" value="Перейти к оплате"/>
         </form>

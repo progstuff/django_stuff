@@ -260,6 +260,23 @@ class ShoppingCartView(View):
                                    'show_data': user_profile is not None})
         return HttpResponseRedirect('products-list')
 
+    def post(self, request):
+        user = request.user
+        if not user.is_anonymous:
+            user_profile = get_user_profile(user)
+            basket_items = []
+            total_sum = 0
+            if user_profile is not None:
+
+                data = BasketItem.objects.filter(user=user_profile)
+                data.delete()  # удаление записей в корзине
+
+            return render(request, 'marketplace_cite/shopping_cart_page.html',
+                          context={'basket_items': basket_items,
+                                   'total_sum': total_sum,
+                                   'show_data': user_profile is not None})
+        return HttpResponseRedirect('products-list')
+
 
 class LogOutView(View):
 
