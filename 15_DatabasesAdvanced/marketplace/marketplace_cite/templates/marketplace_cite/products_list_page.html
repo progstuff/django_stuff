@@ -27,16 +27,18 @@
 {% for product_name, storages in data.items %}
     <h2>{{product_name}}</h2>
     {% for storage in storages %}
-        <div class="wrap-table">
-            <h2>{{storage.shop.name}}</h2>
-            <p>{{storage.price}}</p>
-            <p>{% trans "В наличии"%}: {{storage.count}} {% trans "шт."%}</p>
-            {% if show_button %}
-            <form method="post"> {% csrf_token %}
-                <button type="submit" name="add_button" value="{{storage.id}}">{% trans "Добавить в корзину" %}</button >
-            </form>
-            {% endif %}
-        </div>
+        {% if storage.count > 0%}
+            <div class="wrap-table">
+                <h2>{{storage.shop.name}}</h2>
+                <p>{{storage.price}}</p>
+                <p>{% trans "В наличии"%}: {{storage.count}} {% trans "шт."%}</p>
+                {% if show_button %}
+                <form method="post"> {% csrf_token %}
+                    <button type="submit" name="add_button" value="{{storage.id}}">{% trans "Добавить в корзину" %}</button >
+                </form>
+                {% endif %}
+            </div>
+        {% endif %}
     {% endfor %}
 {% endfor %}
 

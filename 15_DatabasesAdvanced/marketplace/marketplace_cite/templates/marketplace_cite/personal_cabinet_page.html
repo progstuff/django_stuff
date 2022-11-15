@@ -11,7 +11,7 @@
     <h2>{% trans "Имя"%}: {{profile.name}}</h2>
     <table>
       <tr>
-        <td><h2>{% trans "Баланс"%}: {{profile.balance}} {% trans "руб." %}</h2></td>
+        <td><h2>{% trans "Баланс"%}: {{profile.balance|floatformat:2}} {% trans "руб." %}</h2></td>
         <td>
             <form> {% csrf_token %}
                 <input type="button" onclick="window.location.href = '/add-balance';" value="Пополнить баланс"/>

@@ -137,13 +137,15 @@ class ProductsListView(View):
             if user_profile is not None:
                 try:
                     storage_id = int(request.POST['add_button'])
+                    storage = Storage.objects.get(id=storage_id)
                     try:
                         basket = BasketItem.objects.get(user=user_profile, storage__id=storage_id)
-                        basket.count += 1
-                        basket.price = basket.storage.price
-                        basket.save()
+                        if storage.count > basket.count:
+                            basket.count += 1
+                            basket.price = basket.storage.price
+                            basket.save()
+
                     except BasketItem.DoesNotExist:
-                        storage = Storage.objects.get(id=storage_id)
                         BasketItem.objects.create(user=user_profile,
                                                   storage=storage,
                                                   count=1,
@@ -218,21 +220,40 @@ class PurchaseView(View):
                 total_sum, data = calculate_total_sum(data)
                 ##############################################
 
-                ################## создание записей о покупке
+                ############# проверка наличия товара на складе
+                is_overflow = False
                 for item in data:
-                    Purchase.objects.create(shop=item.storage.shop,
-                                            product=item.storage.product,
-                                            price=item.price,
-                                            count=item.count,
-                                            user=user_profile)
+                    if item.count > item.storage.count:
+                        is_overflow = True
+                        break
                 ##############################################
 
-                data.delete() # удаление записей в корзине
+                if not is_overflow:
 
-                ################## обновление баланса
-                user_profile.balance -= total_sum
-                user_profile.save()
-                #####################################
+                    ################## создание записей о покупке
+                    for item in data:
+                        Purchase.objects.create(shop=item.storage.shop,
+                                                product=item.storage.product,
+                                                price=item.price,
+                                                count=item.count,
+                                                user=user_profile)
+                    ##############################################
+
+                    ##### обновление количества на складе
+                    for item in data:
+                        item.storage.count -= item.count
+                        item.storage.save()
+                    #####################################
+
+                    ################## обновление баланса
+                    user_profile.balance -= total_sum
+                    user_profile.save()
+                    #####################################
+
+
+                    data.delete() # удаление записей в корзине
+
+
 
         return HttpResponseRedirect('products-list')
 
@@ -254,10 +275,15 @@ class ShoppingCartView(View):
                 ##############################################
 
                 basket_items = list(data.all())
+                is_not_overflow = True
+                for basket_item in basket_items:
+                    if basket_item.count > basket_item.storage.count:
+                        is_not_overflow = False
             return render(request, 'marketplace_cite/shopping_cart_page.html',
                           context={'basket_items': basket_items,
                                    'total_sum': total_sum,
-                                   'show_data': user_profile is not None})
+                                   'show_data': user_profile is not None,
+                                   'is_not_overflow': is_not_overflow})
         return HttpResponseRedirect('products-list')
 
     def post(self, request):
