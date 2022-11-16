@@ -24,11 +24,11 @@
 
 
 
-{% for product_id, product_name, product_count in data %}
+{% for product_data in data %}
     <div class="wrap-table">
-        <h2>{{product_id}}</h2>
-        <h2>{{product_name}}</h2>
-        <h2>{{product_count}}</h2>
+        <h2>{{product_data.product__id}}</h2>
+        <h2>{{product_data.product__name}}</h2>
+        <h2>{{product_data.total_cnt}}</h2>
     </div>
 {% endfor %}
 
