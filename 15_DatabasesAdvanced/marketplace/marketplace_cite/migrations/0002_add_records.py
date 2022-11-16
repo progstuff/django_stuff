@@ -62,18 +62,34 @@ def fill_db(apps, schema_editor):
 
     all_user_profiles = user_profiles.objects.all()
     all_storages = storages.objects.all()
-    for ind, user_profile in enumerate(all_user_profiles):
+    for ind, user_profile in enumerate(list(all_user_profiles)):
         purchases_cnt = randint(min_purchases_cnt, max_purchases_cnt)
+        purchase_total = 0
         for purchase_ind in range(purchases_cnt):
             storage_ind = randint(0, len(all_storages) - 1)
 
             storage = all_storages[storage_ind]
+            cnt = randint(1, 10)
             purchases.objects.create(shop=storage.shop,
                                      product=storage.product,
                                      user=user_profile,
-                                     count=randint(1, 10),
+                                     count=cnt,
                                      price=storage.price)
-        print('Add {0} purchases for user {1}'.format(purchases_cnt, ind + 1))
+            purchase_total += cnt*storage.price
+
+        if (purchase_total > 20000) and (purchase_total <= 30000):
+            user_status = 'C'
+        elif purchase_total > 30000:
+            user_status = 'З'
+        else:
+            user_status = 'Б'
+        user_profile.status = user_status
+        user_profile.save()
+
+        print('Add {0} purchases for user {1}, total purchases = {2} user_status = {3}'.format(purchases_cnt,
+                                                                                               ind + 1,
+                                                                                               purchase_total,
+                                                                                               user_status))
 
 
 class Migration(migrations.Migration):

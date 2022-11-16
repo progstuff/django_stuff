@@ -75,15 +75,25 @@ class PersonalCabinetView(View):
             user_profile = get_user_profile(user)
             data = []
             if user_profile is not None:
-                data = list(Purchase.objects.filter(user=user_profile)
-                            .select_related('shop')
-                            .select_related('product')
-                            .annotate(sub_total=F('price') * F('count')).all())
+
+                data = Purchase.objects.filter(user=user_profile)\
+                    .select_related('shop')\
+                    .select_related('product')\
+                    .annotate(sub_total=F('price') * F('count')).all()
+
+                total_sum = data.aggregate(Sum('sub_total'))
+                total_sum = total_sum['sub_total__sum']
+                if total_sum is None:
+                    total_sum = 0
+
+                data = list(data)
+
             return render(request,
                           'marketplace_cite/personal_cabinet_page.html',
                           context={'profile': user_profile,
                                    'is_exist': user_profile is not None,
-                                   'purchases': data})
+                                   'purchases': data,
+                                   'total_sum': total_sum})
         else:
             return HttpResponseRedirect('products-list')
 
@@ -91,7 +101,8 @@ class PersonalCabinetView(View):
 class PopularProductsView(View):
 
     def get(self, request):
-        return render(request, 'marketplace_cite/popular_products_page.html', context={})
+        purchases = list(Purchase.objects.select_related('product').all())
+        return render(request, 'marketplace_cite/popular_products_page.html', context={'purchases': purchases})
 
 
 class ProductsListView(View):
@@ -245,15 +256,28 @@ class PurchaseView(View):
                         item.storage.save()
                     #####################################
 
+                    data.delete()# удаление записей в корзине
+
+                    data = Purchase.objects.filter(user=user_profile) \
+                        .annotate(sub_total=F('price') * F('count')).all()
+
+                    total_purchase_sum = data.aggregate(Sum('sub_total'))
+                    total_purchase_sum = total_purchase_sum['sub_total__sum']
+                    if total_purchase_sum is None:
+                        total_purchase_sum = 0
+
+                    if (total_purchase_sum > 20000) and (total_purchase_sum <= 30000):
+                        user_status = 'C'
+                    elif total_purchase_sum > 30000:
+                        user_status = 'З'
+                    else:
+                        user_status = 'Б'
+
                     ################## обновление баланса
                     user_profile.balance -= total_sum
+                    user_profile.status = user_status
                     user_profile.save()
                     #####################################
-
-
-                    data.delete() # удаление записей в корзине
-
-
 
         return HttpResponseRedirect('products-list')
 
