@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from .forms import AuthForm, UserRegisterForm, AddBalanceForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import UserProfile, Storage, BasketItem, Purchase
+from .models import UserProfile, Storage, BasketItem, Purchase, Product
 from typing import Union, List, Dict
 from django.db.models import Sum
 from django.db.models import F
@@ -101,8 +101,18 @@ class PersonalCabinetView(View):
 class PopularProductsView(View):
 
     def get(self, request):
-        purchases = list(Purchase.objects.select_related('product').all())
-        return render(request, 'marketplace_cite/popular_products_page.html', context={'purchases': purchases})
+        products = list(Product.objects.all())
+        result = []
+
+        for product in products:
+            data = Purchase.objects.filter(product=product).select_related('product')
+            total_sum = data.aggregate(Sum('count'))
+            total_sum = total_sum['count__sum']
+            if total_sum is None:
+                total_sum = 0
+            result.append((product.id, product.name, total_sum))
+
+        return render(request, 'marketplace_cite/popular_products_page.html', context={'data': result})
 
 
 class ProductsListView(View):
