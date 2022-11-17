@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponseRedirect
-from .forms import AuthForm, UserRegisterForm, AddBalanceForm
+from .forms import AuthForm, UserRegisterForm, AddBalanceForm, PeriodForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import UserProfile, Storage, BasketItem, Purchase, Product
+from .models import UserProfile, Storage, BasketItem, Purchase
 from typing import Union, List, Dict
-from django.db.models import Sum, F, CharField, Value
+from django.db.models import Sum, F
 from django.db.models.query import QuerySet
+from datetime import datetime
 # Create your views here.
 
 
@@ -100,16 +101,51 @@ class PersonalCabinetView(View):
 
 class PopularProductsView(View):
 
+    def monthdelta(self, date: datetime, delta: int) -> datetime:
+        m, y = (date.month + delta) % 12, date.year + ((date.month) + delta - 1) // 12
+        if not m: m = 12
+        d = min(date.day, [31,
+                           29 if y % 4 == 0 and (not y % 100 == 0 or y % 400 == 0) else 28,
+                           31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1])
+        return date.replace(day=d, month=m, year=y)
+
     def get(self, request):
+        form = PeriodForm()
         ## группировка по id товара
-        result = list(Purchase.objects
+        min_date = self.monthdelta(datetime.now(), -1)
+        result = list(Purchase.objects.filter(create_date__gt=min_date)
                       .values('product__id', 'product__name')
                       .annotate(total_cnt=Sum('count'))
                       .order_by('-total_cnt')
                       )
         ###########################
-        return render(request, 'marketplace_cite/popular_products_page.html', context={'data': result})
+        return render(request, 'marketplace_cite/popular_products_page.html', context={'data': result,
+                                                                                       'form': form})
 
+    def post(self, request):
+        form = PeriodForm(request.POST)
+
+        period = int(form.data['period'])
+        if period == 0:
+            ## группировка по id товара
+            result = list(Purchase.objects
+                          .values('product__id', 'product__name')
+                          .annotate(total_cnt=Sum('count'))
+                          .order_by('-total_cnt')
+                          )
+            ###########################
+        else:
+            min_date = self.monthdelta(datetime.now(), -period)
+            ## группировка по id товара
+            result = list(Purchase.objects.filter(create_date__gt=min_date)
+                          .values('product__id', 'product__name')
+                          .annotate(total_cnt=Sum('count'))
+                          .order_by('-total_cnt')
+                          )
+            ###########################
+
+        return render(request, 'marketplace_cite/popular_products_page.html', context={'data': result,
+                                                                                       'form': form})
 
 class ProductsListView(View):
 

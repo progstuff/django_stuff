@@ -21,9 +21,12 @@
 </head>
 <body>
 {% include 'marketplace_cite/header.html' %}
+<a href="/popular-products">{% trans "Популярные продукты" %}</a>
+
 {% if show_button %}
     <h1><a href="/shopping-cart">{% trans "Корзина"%}</a> {{basket_items_cnt}} {% trans "шт."%} {% trans "Сумма" %} {{total_sum|floatformat:2}} {% trans "руб."%}</h1>
 {% endif %}
+
 {% for product_name, storages in data.items %}
     <h2>{{product_name}}</h2>
     {% for storage in storages %}

@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -21,8 +22,12 @@
 </head>
 <body>
 {% include 'marketplace_cite/header.html' %}
-
-
+<a href="/products-list">{% trans "На главную" %}</a>
+<form method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">{% trans "Обновить" %}</button>
+</form>
 
 {% for product_data in data %}
     <div class="wrap-table">

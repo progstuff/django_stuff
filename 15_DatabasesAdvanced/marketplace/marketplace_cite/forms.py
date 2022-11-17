@@ -15,6 +15,14 @@ class AddBalanceForm(forms.Form):
                                min_value=0.01)
 
 
+class PeriodForm(forms.Form):
+    period = forms.ChoiceField(choices=[(_('1'), _('последний месяц')),
+                                        (_('3'), _('последние 3 месяца')),
+                                        (_('12'), _('последний год')),
+                                        (_('0'), _('всё время'))],
+                               label=_('Учесть товары за'))
+
+
 class UserRegisterForm(UserCreationForm):
 
     password1 = forms.CharField(
