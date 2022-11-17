@@ -19,7 +19,7 @@ class ProductModelAdmin(admin.ModelAdmin):
 
 @admin.register(Purchase)
 class PurchaseModelAdmin(admin.ModelAdmin):
-    list_display = ['id', 'shop', 'product', 'user', 'count', 'price']
+    list_display = ['id', 'shop', 'product', 'user', 'count', 'price', 'create_date']
 
 
 @admin.register(Storage)

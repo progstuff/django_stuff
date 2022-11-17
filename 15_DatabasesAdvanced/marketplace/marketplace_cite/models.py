@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
-# Create your models here.
+from datetime import datetime
 
 
 class UserProfile(models.Model):
@@ -61,6 +61,8 @@ class Purchase(models.Model):
     count = models.IntegerField(default=0, verbose_name=_('Количество'))
 
     price = models.FloatField(default=0, verbose_name=_('Цена'))
+
+    create_date = models.DateTimeField(default=datetime.now, verbose_name='Дата покупки')
 
     class Meta:
         verbose_name_plural = _('Покупки')

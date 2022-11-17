@@ -78,6 +78,7 @@ class PersonalCabinetView(View):
                 data = Purchase.objects.filter(user=user_profile)\
                     .select_related('shop')\
                     .select_related('product')\
+                    .order_by('-create_date')\
                     .annotate(sub_total=F('price') * F('count')).all()
 
                 total_sum = data.aggregate(Sum('sub_total'))
