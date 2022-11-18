@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+
 urlpatterns = [
     path('add-balance', views.BalancePage.as_view(), name='balance'),
     path('login', views.AuthenticationView.as_view(), name='login'),
