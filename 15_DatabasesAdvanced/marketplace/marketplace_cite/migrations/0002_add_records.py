@@ -11,11 +11,11 @@ def fill_db(apps, schema_editor):
     products = apps.get_model('marketplace_cite', 'Product')
     purchases = apps.get_model('marketplace_cite', 'Purchase')
     storages = apps.get_model('marketplace_cite', 'Storage')
-    users_cnt = 10
+    users_cnt = 100
     shops_cnt = 20
-    products_cnt = 30
-    max_storages_cnt = 20
-    min_storages_cnt = 5
+    products_cnt = 1000
+    max_storages_cnt = 900
+    min_storages_cnt = 50
     min_product_count = 10
     max_product_count = 100
     min_product_price = 100
@@ -25,23 +25,32 @@ def fill_db(apps, schema_editor):
     min_purchases_cnt = 10
     max_purchases_cnt = 20
 
+
     for user_ind in range(1, users_cnt+1):
         users.objects.create(username='User_{}'.format(user_ind),
                              password=make_password('User_{}'.format(user_ind)))
+        print('Added User_{}'.format(user_ind))
     print('Users added')
+
     for ind, user in enumerate(users.objects.all()):
         user_profiles.objects.create(name='name_in_profile{}'.format(ind+1),
                                      balance=randint(min_balance*100, max_balance*100)/100.0,
                                      status='Б',
                                      user=user)
+        print('Added name_in_profile{}'.format((ind+1)))
     print('User profiles added')
+
     for shop_ind in range(1, shops_cnt+1):
         shops.objects.create(name='shop_{}'.format(shop_ind))
+        print('Added shop_{}'.format(shop_ind))
     print('Shops added')
+
     for product_ind in range(1, products_cnt+1):
         products.objects.create(name='product_{}'.format(product_ind),
                                 description='description_{}'.format(product_ind))
+        print('Added product_{}'.format(product_ind))
     print('Products added')
+
     all_products = products.objects.all()
     for ind, shop in enumerate(shops.objects.all()):
         choosed_products = []

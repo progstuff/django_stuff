@@ -9,6 +9,10 @@ from typing import Union, List, Dict
 from django.db.models import Sum, F
 from django.db.models.query import QuerySet
 from datetime import datetime
+import logging
+
+logger = logging.getLogger(__name__)
+
 # Create your views here.
 
 
@@ -56,6 +60,7 @@ class BalancePage(View):
                 if user_profile is not None:
                     user_profile.balance += balance
                     user_profile.save()
+                    logger.info('баланс пополнен')
 
             return render(request,
                           'marketplace_cite/add_balance_page.html',
@@ -158,7 +163,15 @@ class ProductsListView(View):
             if current_product_name not in result:
                 result[current_product_name] = []
             result[current_product_name].append(storage)
-        return result
+
+        i = 0
+        short_result = {}
+        for key in result:
+            short_result[key] = result[key]
+            i += 1
+            if i > 100:
+                break
+        return short_result
 
     def get(self, request):
         storages = list(Storage.objects.select_related('shop').select_related('product').order_by('price').all())
@@ -315,11 +328,17 @@ class PurchaseView(View):
                     else:
                         user_status = 'Б'
 
+                    prev_status = user_profile.status
+                    if prev_status != user_status:
+                        logger.info('статус пользователя изменен')
+
                     ################## обновление баланса
                     user_profile.balance -= total_sum
                     user_profile.status = user_status
                     user_profile.save()
                     #####################################
+                    logger.info('баллы списаны с баланса')
+                    logger.info('заказ оформлен')
 
         return HttpResponseRedirect('products-list')
 
@@ -393,6 +412,7 @@ class AuthenticationView(View):
             if user:
                 if user.is_active:
                     login(request, user)
+                    logger.info('пользователь аутентифицирован')
                     return HttpResponseRedirect('/products-list')
                 else:
                     auth_form.add_error('__all__', 'Учётная запись не активна')
