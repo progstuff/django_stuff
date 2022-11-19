@@ -1,6 +1,9 @@
 from django.db import migrations
 from random import randint
 from django.contrib.auth.hashers import make_password
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def fill_db(apps, schema_editor):
@@ -25,31 +28,30 @@ def fill_db(apps, schema_editor):
     min_purchases_cnt = 10
     max_purchases_cnt = 20
 
-
     for user_ind in range(1, users_cnt+1):
         users.objects.create(username='User_{}'.format(user_ind),
                              password=make_password('User_{}'.format(user_ind)))
-        print('Added User_{}'.format(user_ind))
-    print('Users added')
+        logger.info('migration: Added User_{}'.format(user_ind))
+    logger.info('migration: Users added')
 
     for ind, user in enumerate(users.objects.all()):
         user_profiles.objects.create(name='name_in_profile{}'.format(ind+1),
                                      balance=randint(min_balance*100, max_balance*100)/100.0,
                                      status='Б',
                                      user=user)
-        print('Added name_in_profile{}'.format((ind+1)))
-    print('User profiles added')
+        logger.info('migration: Added name_in_profile{}'.format((ind+1)))
+    logger.info('migration: User profiles added')
 
     for shop_ind in range(1, shops_cnt+1):
         shops.objects.create(name='shop_{}'.format(shop_ind))
-        print('Added shop_{}'.format(shop_ind))
-    print('Shops added')
+        logger.info('migration: Added shop_{}'.format(shop_ind))
+    logger.info('migration: Shops added')
 
     for product_ind in range(1, products_cnt+1):
         products.objects.create(name='product_{}'.format(product_ind),
                                 description='description_{}'.format(product_ind))
-        print('Added product_{}'.format(product_ind))
-    print('Products added')
+        logger.info('migration: Added product_{}'.format(product_ind))
+    logger.info('migration: Products added')
 
     all_products = products.objects.all()
     for ind, shop in enumerate(shops.objects.all()):
@@ -67,7 +69,7 @@ def fill_db(apps, schema_editor):
                                     product=product,
                                     count=randint(min_product_count, max_product_count),
                                     price=randint(min_product_price*100, max_product_price*100)/100)
-        print('Add {0} storages for {1} shop'.format(storages_cnt, ind+1))
+        logger.info('migration: Add {0} storages for {1} shop'.format(storages_cnt, ind+1))
 
     all_user_profiles = user_profiles.objects.all()
     all_storages = storages.objects.all()
@@ -95,10 +97,10 @@ def fill_db(apps, schema_editor):
         user_profile.status = user_status
         user_profile.save()
 
-        print('Add {0} purchases for user {1}, total purchases = {2} user_status = {3}'.format(purchases_cnt,
-                                                                                               ind + 1,
-                                                                                               purchase_total,
-                                                                                               user_status))
+        logger.info('migration: Add {0} purchases for user {1}, total purchases = {2} user_status = {3}'.format(purchases_cnt,
+                                                                                                                ind + 1,
+                                                                                                                purchase_total,
+                                                                                                                user_status))
 
 
 class Migration(migrations.Migration):
