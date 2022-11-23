@@ -27,7 +27,7 @@ class AdvertisementsView(View):
 
 
 class Contacts(TemplateView):
-    template_name = 'advertisements/contacts.html'
+    template_name = 'advertisements/page_contacts.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -38,7 +38,7 @@ class Contacts(TemplateView):
 
 
 class About(TemplateView):
-    template_name = 'advertisements/about.html'
+    template_name = 'advertisements/page_about.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
