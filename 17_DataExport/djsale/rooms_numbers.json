@@ -1,1 +1,0 @@
-[{"model": "housing.roomsnumber", "pk": 1, "fields": {"number_type": "Однокомнатная квартира"}}, {"model": "housing.roomsnumber", "pk": 2, "fields": {"number_type": "Двухкомнатная квартира"}}, {"model": "housing.roomsnumber", "pk": 3, "fields": {"number_type": "Трехкомнатная квартира"}}, {"model": "housing.roomsnumber", "pk": 4, "fields": {"number_type": "Студия"}}]
