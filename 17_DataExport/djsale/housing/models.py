@@ -1,11 +1,13 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from datetime import datetime
 # Create your models here.
 
 
 class News(models.Model):
     name = models.CharField(max_length=1000, verbose_name=_('Заголовок'))
     description = models.TextField(max_length=10000, verbose_name=_('Описание'))
+    created_date = models.DateTimeField(default=datetime.now, verbose_name=_('Дата создания'))
 
     class Meta:
         verbose_name_plural = _('Новости')

@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>{% trans "Новости" %}</title>
+    <title>{{news_item.id}}</title>
 </head>
 <body>
 
@@ -12,9 +12,8 @@
 <a href="/contacts">{% trans "Контакты" %}</a>
 <a href="/about">{% trans "О нас" %}</a>
 
-{% for n in news %}
-    <h2><a href="/news-item/{{n.id}}">{{n.name}}</a></h2>
-{% endfor %}
+<h2>{{news_item.name}}</a></h2>
+<h3>{{news_item.description}}</h3>
 
 </body>
 </html>

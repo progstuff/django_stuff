@@ -4,7 +4,7 @@ from .models import HouseType, Housing, RoomsNumber, News
 
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'description']
+    list_display = ['id', 'name', 'description', 'created_date']
 
 
 @admin.register(HouseType)
