@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponseRedirect
 from .models import Housing, News
+from django.urls import reverse
 
 
 class ContactsPage(View):
