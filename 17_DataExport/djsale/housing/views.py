@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import View
-# Create your views here.
+from .models import Housing, News
 
 
 class ContactsPage(View):
@@ -22,15 +22,17 @@ class AboutPage(View):
 class HouseListPage(View):
 
     def get(self, request):
+        houses = list(Housing.objects.select_related('house_type').select_related('rooms_number').all())
         return render(request,
                       'housing/page_house_list.html',
-                      context={})
+                      context={'houses': houses})
 
 
 class NewsPage(View):
 
     def get(self, request):
+        news = list(News.objects.all())
         return render(request,
                       'housing/page_news.html',
-                      context={})
+                      context={'news': news})
 

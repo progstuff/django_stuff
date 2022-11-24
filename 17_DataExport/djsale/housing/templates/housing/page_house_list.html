@@ -1,10 +1,20 @@
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{% trans "Квартиры" %}</title>
 </head>
 <body>
+<a href="/house-list">{% trans "Квартиры" %}</a>
+<a href="/news">{% trans "Новости" %}</a>
+<a href="/contacts">{% trans "Контакты" %}</a>
+<a href="/about">{% trans "О нас" %}</a>
 
+{% for house in houses %}
+    <h2>{{house.address}}</h2>
+    <h3>{{house.house_type.type_name}}</h3>
+    <h3>{{house.rooms_number.number_type}}</h3>
+{% endfor %}
 </body>
 </html>

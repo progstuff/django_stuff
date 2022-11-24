@@ -1,0 +1,1 @@
+[{"model": "housing.housing", "pk": 1, "fields": {"address": "ул 1, д1, кв1", "house_type": 1, "rooms_number": 1}}, {"model": "housing.housing", "pk": 2, "fields": {"address": "ул 2, д2, кв2", "house_type": 3, "rooms_number": 3}}, {"model": "housing.housing", "pk": 3, "fields": {"address": "ул 3, д3, кв3", "house_type": 4, "rooms_number": 2}}]
